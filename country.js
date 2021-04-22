@@ -6,10 +6,15 @@ var url="http://127.0.0.1:5000/get_map_data/"
 
 async function getJson(dataUrl){
     var response = await fetch(dataUrl,
-      { mode: "no-cors" });
-    //   {
-    //     headers: {'Access-Control-Allow-Origin':'*'}
-    // });
+      {
+        method: "GET",
+        mode: 'no-cors',
+        headers: {
+          'Content-Type': 'application/json',
+          "Access-Control-Allow-Origin" : "*", 
+          "Access-Control-Allow-Credentials" : true 
+        }
+    });
     var data= await response.json();
     console.log(data)
 
@@ -69,19 +74,19 @@ async function ready(error, data) {
     var options=["Select","Score","Rank","GDP per capita","Social support", "Healthy life expectancy","Freedom to make life choices","Generosity",
     "Perceptions of corruption","Population","Percentage of internet users","percentage of non-religious people"]
     
-    d3.select("#menu")
-          .selectAll('myOptions')
-             .data(options)
-          .enter()
-            .append('option')
-          .text(function (d) { return d; }) // text showed in the menu
-          .attr("value", function (d) { return d; })
+    // d3.select("#menu")
+    //       .selectAll('myOptions')
+    //          .data(options)
+    //       .enter()
+    //         .append('option')
+    //       .text(function (d) { return d; }) // text showed in the menu
+    //       .attr("value", function (d) { return d; })
     
 
-    d3.select("#menu").on("change", function(){
-        selected_feature=d3.select("#menu").property("value")
-        console.log(selected_feature)
-    } )
+    // d3.select("#menu").on("change", function(){
+    //     selected_feature=d3.select("#menu").property("value")
+    //     console.log(selected_feature)
+    // } )
 
 
     // function displayMap(option){
@@ -90,19 +95,19 @@ async function ready(error, data) {
         csvdata.forEach(function (d)  { optionByCountry[d.iso]=+d.Score; });
         data.features.forEach(function(d) { d.Score = optionByCountry[d.id] });
         svg.append("g")
-      .attr("class", "countries")
-    .selectAll("path")
-      .data(data.features)
-    .enter().append("path")
-      .attr("d", path)
-      .style("fill", function(d) { 
-        return color(optionByCountry[d.id]); })
-      .style('stroke', 'white')
-      .style('stroke-width', 1.5)
-      .style("opacity",0.8)
+          .attr("class", "countries")
+        .selectAll("path")
+          .data(data.features)
+          .enter().append("path")
+          .attr("d", path)
+            .style("fill", function(d) { 
+              return color(optionByCountry[d.id]); })
+            .style('stroke', 'white')
+            .style('stroke-width', 1.5)
+            .style("opacity",0.8)
       // tooltips
-        .style("stroke","white")
-        .style('stroke-width', 0.3)
+            .style("stroke","white")
+          .style('stroke-width', 0.3)
         .on('mouseover',function(d){
 
             tip.show(d);
