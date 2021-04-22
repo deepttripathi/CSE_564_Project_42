@@ -1,11 +1,32 @@
 var format = d3.format(",");
-var tip = d3.tip()
+var selected_feature;
+
+
+var url="http://127.0.0.1:5000/get_map_data/"
+
+async function getJson(dataUrl){
+    var response = await fetch(dataUrl,
+      { mode: "no-cors" });
+    //   {
+    //     headers: {'Access-Control-Allow-Origin':'*'}
+    // });
+    var data= await response.json();
+    console.log(data)
+
+    return data;
+}
+
+
+// function tip(optionss){
+    var tip = d3.tip()
             .attr('class', 'd3-tip')
             .offset([-10, 0])
             .html(function(d) {
-              return "<strong>Country: </strong><span class='details'>" + d.properties.name + "<br></span>" + "<strong>Happiness Score: </strong><span class='details'>" + format(d.Score) +"</span>";
+              return "<strong>Country: </strong><span class='details'>" + d.properties.name + "<br></span>" + "<strong> Happiness Score: </strong><span class='details'>" + format(d.Score) +"</span>";
             })
+    // return tip
 
+// }
 
 var margin = {top: -40, right: 0, bottom: 0, left: 0},
             width = 800 - margin.left - margin.right,
@@ -34,14 +55,18 @@ svg.call(tip);
 
 d3.queue()
     .defer(d3.json, "world_countries.json")
-    .defer(d3.csv, "final.csv")
     .await(ready);
 
 
 
-function ready(error, data, csvdata) {
+async function ready(error, data) {
 
-    var options=["Rank","Score","GDP per capita","Social support", "Healthy life expectancy","Freedom to make life choices","Generosity",
+    dataUrl=url
+    dataUrl+="Score"
+    console.log(dataUrl)
+    var csvdata=await getJson(dataUrl);  
+
+    var options=["Select","Score","Rank","GDP per capita","Social support", "Healthy life expectancy","Freedom to make life choices","Generosity",
     "Perceptions of corruption","Population","Percentage of internet users","percentage of non-religious people"]
     
     d3.select("#menu")
@@ -52,34 +77,26 @@ function ready(error, data, csvdata) {
           .text(function (d) { return d; }) // text showed in the menu
           .attr("value", function (d) { return d; })
     
-    // d3.select("#menu").on("change", display )
 
-    console.log(csvdata)
-    console.log(data.features[0])
-//   var populationById = {};
+    d3.select("#menu").on("change", function(){
+        selected_feature=d3.select("#menu").property("value")
+        console.log(selected_feature)
+    } )
 
 
     // function displayMap(option){
 
-    // }
-
-
-    var scoreByCountry={};
-    csvdata.forEach(function (d)  { scoreByCountry[d.country]=+d.Score; });
-    data.features.forEach(function(d) { d.Score = scoreByCountry[d.properties.name] });
-
-//   population.forEach(function(d) { populationById[d.id] = +d.population; });
-
-
-  svg.append("g")
+        var optionByCountry={};
+        csvdata.forEach(function (d)  { optionByCountry[d.iso]=+d.Score; });
+        data.features.forEach(function(d) { d.Score = optionByCountry[d.id] });
+        svg.append("g")
       .attr("class", "countries")
     .selectAll("path")
       .data(data.features)
     .enter().append("path")
       .attr("d", path)
       .style("fill", function(d) { 
-        // console.log("hiii")  
-        return color(scoreByCountry[d.properties.name]); })
+        return color(optionByCountry[d.id]); })
       .style('stroke', 'white')
       .style('stroke-width', 1.5)
       .style("opacity",0.8)
@@ -87,15 +104,15 @@ function ready(error, data, csvdata) {
         .style("stroke","white")
         .style('stroke-width', 0.3)
         .on('mouseover',function(d){
-          tip.show(d);
 
+            tip.show(d);
           d3.select(this)
             .style("opacity", 1)
             .style("stroke","white")
             .style("stroke-width",3)
         })
         .on('mouseout', function(d){
-          tip.hide(d);
+            tip.hide(d);
 
           d3.select(this)
             .style("opacity", 0.8)
@@ -104,16 +121,20 @@ function ready(error, data, csvdata) {
         });
 
   svg.append("path")
-      .data(topojson.mesh(data.features, function(a, b) { return a.properties.name !== b.properties.name; }))
+      .data(topojson.mesh(data.features, function(a, b) { return a.id !== b.id; }))
       .attr("class", "names")
       .attr("d", path);
 
+        
+    }
 
-    //   function display(){
+    // function display(){
     //     var selected = d3.select("#menu").property("value");
-    //     if (selected == "")
-
+    //     if (selected == "Rank"){
+    //         displayMap("Overall rank")
+    //     }
+                
     // }
-}
+// }
 
 

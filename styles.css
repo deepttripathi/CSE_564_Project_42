@@ -70,3 +70,9 @@
       .details{
         color:white;
       }
+
+      .attributes{
+          bottom: 500px;
+          left:30px;
+          position: relative;
+      }
