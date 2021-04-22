@@ -44,8 +44,8 @@ var svg = d3.select("body")
             .attr('class', 'map');
 
 var projection = d3.geoMercator()
-                   .scale(130)
-                  .translate( [width / 2, height / 1.5]);
+                   .scale(100)
+                  .translate( [width / 2, height / 2]);
 
 var path = d3.geoPath().projection(projection);
 
@@ -57,7 +57,7 @@ d3.queue()
 
 async function ready(error, data) {
 
-    var options=["Select","Score","Overall rank","GDP per capita","Social support", "Healthy life expectancy","Freedom to make life choices","Generosity",
+    var options=["Score","Overall rank","GDP per capita","Social support", "Healthy life expectancy","Freedom to make life choices","Generosity",
     "Perceptions of corruption","Population","Percentage","percentage_non_religious"]
     
     d3.select("#menu")
@@ -68,6 +68,7 @@ async function ready(error, data) {
           .text(function (d) { return d; }) // text showed in the menu
           .attr("value", function (d) { return d; })
     
+        displayMap("Score")
 
     d3.select("#menu").on("change", function(){
         selected_feature=d3.select("#menu").property("value");
@@ -94,6 +95,7 @@ async function ready(error, data) {
         colordata.forEach(function (d)  { 
           colorVal[d.iso]=d[feature+"_scaled"]; 
         });
+
         console.log(colorVal)
 
         data.features.forEach(function(d) { d[feature] = optionByCountry[d.id] });

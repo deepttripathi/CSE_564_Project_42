@@ -7,9 +7,9 @@
       /* Tooltip CSS */
       .d3-tip {
       line-height: 1.5;
-      font-weight: 400;
-      font-family:"avenir next", Arial, sans-serif;
-      padding: 6px;
+      font-weight: 350;
+      font-family:"avenir next", sans-serif, sans-serif;
+      padding: 4px;
       background: rgba(0, 0, 0, 0.6);
       color: #FFA500;
       border-radius: 1px;
@@ -20,7 +20,7 @@
       .d3-tip:after {      
         box-sizing: border-box;
         display: inline;
-        font-size: 8px;
+        font-size: 6px;
         width: 100%;
         line-height: 1.5;
         color: rgba(0, 0, 0, 0.6);
@@ -73,6 +73,25 @@
 
       .attributes{
           bottom: 500px;
-          left:180px;
+          left:150px;
           position: relative;
+          border: 2px;
+          font-family: sans-serif;
+          font-size: 13px;
+          /* background-color: #f6fbfc; */
+          padding: 4px;
+
+
+        }
+      .list{
+        background-color:#f6fbfc;
+        /* border: 3px; */
+        border-color: black;
+        border-collapse: collapse;
+        padding: 4px;
+        font-size: 13px;
+        font-family: sans-serif;
+        width: auto;
+        color: rgb(46, 48, 48);
+        
       }
