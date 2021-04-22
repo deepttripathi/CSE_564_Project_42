@@ -8,7 +8,7 @@ def mergeCSV(basedir, filename1, filename2, filename3, onColumn):
     output1 = pd.merge(data1, data2, on=onColumn, how='inner')
     print(output1)
     output2 = pd.merge(output1, data3, on=onColumn, how='inner').drop(
-        ['Unnamed: 0', 'iso', 'gdp_pc', 'gpi_rank', 'gpi_score'], axis=1)
+        ['Unnamed: 0', 'gdp_pc', 'gpi_rank', 'gpi_score'], axis=1)
     print(output2)
     return output2
 
