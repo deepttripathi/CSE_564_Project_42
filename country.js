@@ -93,55 +93,53 @@ async function ready(error, data) {
           optionByCountry[d.iso]=+d[feature]; 
         });
 
-        // max=0
-        // function getMaxVal() {
-        //   return csvdata.reduce((max, p) => +p[feature] > max ? +p[feature]: max, csvdata[0][feature]);
-        // }
-        // maxVal=getMaxVal()
+        max=0
+        function getMaxVal() {
+          return csvdata.reduce((max, p) => +p[feature] > max ? +p[feature]: max, csvdata[0][feature]);
+        }
+        maxVal=getMaxVal()
 
-        // min=-2
-        // function getMinVal() {
-        //   return csvdata.reduce((min, p) => +p[feature] < min ? +p[feature]: min, csvdata[0][feature]);
-        // }
-        // minVal=getMinVal()
+        min=-2
+        function getMinVal() {
+          return csvdata.reduce((min, p) => +p[feature] < min ? +p[feature]: min, csvdata[0][feature]);
+        }
+        minVal=getMinVal()
 
-        // range=(maxVal/10)
+        range=(maxVal/10)
         
-        // var i;
-        // var label=[]
-        // xmin=minVal
-        // for (i = 0; i < 10; i++) { 
-        //   newrange=(xmin+range)
-        //   label[i]=((xmin).toString())+"-"+(newrange.toString());
-        //   xmin=newrange
-        //   // xmin.toFixed(2)
-        // }
-        // // console.log(label)
-
+        var i;
+        var label=[]
+        xmin=minVal
+        range=range.toFixed(2)
+        for (i = 0; i < 10; i++) { 
+          xmin=Number(xmin).toFixed(2)
+          newrange=(Number(xmin)+Number(range)).toFixed(2)
+          label[i]=((xmin).toString())+"-"+(newrange.toString());
+          xmin=newrange
+        }
         
-        // if(document.getElementById("legend"))
-        // document.getElementById("legend").remove();
+        if(document.getElementById("legend"))
+        document.getElementById("legend").remove();
 
-        // //adding legend
-        // var g = svg.append("g")
-        // .attr("class", "legendThreshold")
-        // .attr("transform", "translate(5,320)");
-        // g.append("text")
-        // .attr("class", "caption")
-        // .attr("id","legend")
-        // .attr("x", 0)
-        // .attr("y", -10)
-        // .text(function (d){
-        //   return feature;
-        // });
+        //adding legend
+        var g = svg.append("g")
+        .attr("class", "legendThreshold")
+        .attr("transform", "translate(5,320)");
+        g.append("text")
+        .attr("class", "caption")
+        .attr("id","legend")
+        .attr("x", 0)
+        .attr("y", -10)
+        .text(function (d){
+          return feature;
+        });
 
-        // // var labels = ['0', '1-5', '6-10', '11-25', '26-100', '101-1000', '> 1000'];
-        // var legend = d3.legendColor()
-        // .labels(function (d) { return label[d.i]; })
-        // .shapePadding(4)
-        // .scale(color);
-        // svg.select(".legendThreshold")
-        // .call(legend);
+        var legend = d3.legendColor()
+        .labels(function (d) { return label[d.i]; })
+        .shapePadding(4)
+        .scale(color);
+        svg.select(".legendThreshold")
+        .call(legend);
 
 
 
