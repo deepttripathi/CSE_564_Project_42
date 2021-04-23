@@ -34,6 +34,7 @@ var color = d3.scaleThreshold()
     .domain([1,2,3,4,5,6,7,8,9,10])
     .range(["rgb(247,251,255)", "rgb(222,235,247)", "rgb(198,219,239)", "rgb(158,202,225)", "rgb(107,174,214)", "rgb(66,146,198)","rgb(33,113,181)","rgb(8,81,156)","rgb(8,48,107)","rgb(3,19,43)"]);
 
+
 var path = d3.geoPath();
 
 var svg = d3.select("body")
@@ -44,7 +45,7 @@ var svg = d3.select("body")
             .attr('class', 'map');
 
 var projection = d3.geoMercator()
-                   .scale(100)
+                   .scale(80)
                   .translate( [width / 2, height / 2]);
 
 var path = d3.geoPath().projection(projection);
@@ -92,6 +93,60 @@ async function ready(error, data) {
           optionByCountry[d.iso]=+d[feature]; 
         });
 
+        // max=0
+        // function getMaxVal() {
+        //   return csvdata.reduce((max, p) => +p[feature] > max ? +p[feature]: max, csvdata[0][feature]);
+        // }
+        // maxVal=getMaxVal()
+
+        // min=-2
+        // function getMinVal() {
+        //   return csvdata.reduce((min, p) => +p[feature] < min ? +p[feature]: min, csvdata[0][feature]);
+        // }
+        // minVal=getMinVal()
+
+        // range=(maxVal/10)
+        
+        // var i;
+        // var label=[]
+        // xmin=minVal
+        // for (i = 0; i < 10; i++) { 
+        //   newrange=(xmin+range)
+        //   label[i]=((xmin).toString())+"-"+(newrange.toString());
+        //   xmin=newrange
+        //   // xmin.toFixed(2)
+        // }
+        // // console.log(label)
+
+        
+        // if(document.getElementById("legend"))
+        // document.getElementById("legend").remove();
+
+        // //adding legend
+        // var g = svg.append("g")
+        // .attr("class", "legendThreshold")
+        // .attr("transform", "translate(5,320)");
+        // g.append("text")
+        // .attr("class", "caption")
+        // .attr("id","legend")
+        // .attr("x", 0)
+        // .attr("y", -10)
+        // .text(function (d){
+        //   return feature;
+        // });
+
+        // // var labels = ['0', '1-5', '6-10', '11-25', '26-100', '101-1000', '> 1000'];
+        // var legend = d3.legendColor()
+        // .labels(function (d) { return label[d.i]; })
+        // .shapePadding(4)
+        // .scale(color);
+        // svg.select(".legendThreshold")
+        // .call(legend);
+
+
+
+
+
         colordata.forEach(function (d)  { 
           colorVal[d.iso]=d[feature+"_scaled"]; 
         });
@@ -134,6 +189,9 @@ async function ready(error, data) {
       .data(topojson.mesh(data.features, function(a, b) { return a.id !== b.id; }))
       .attr("class", "names")
       .attr("d", path);
+
+
+    
 
         
     }

@@ -55,12 +55,6 @@ def get_religion_data(feature):
     return result_df.to_json(orient='records')
 
 
-# x = df.values #returns a numpy array
-# min_max_scaler = preprocessing.MinMaxScaler()
-# x_scaled = min_max_scaler.fit_transform(x)
-# df = pd.DataFrame(x_scaled)
-
-
 @app.route('/get_color_map/<string:feature>')
 def get_color_map(feature):
     data = pd.read_csv("final.csv")

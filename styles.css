@@ -72,8 +72,8 @@
       }
 
       .attributes{
-          bottom: 500px;
-          left:150px;
+          bottom: 470px;
+          left:200px;
           position: relative;
           border: 2px;
           font-family: sans-serif;
@@ -95,3 +95,15 @@
         color: rgb(46, 48, 48);
         
       }
+/* 
+      .legendThreshold {
+        font-size: 12px;
+        font-family: sans-serif;
+        top: 100px;
+        left: 100px;
+    }
+    .caption {
+        fill: #000;
+        text-anchor: start;
+        font-weight: bold;
+    } */
