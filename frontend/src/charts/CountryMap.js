@@ -1,18 +1,27 @@
 import React, { useRef, useEffect } from "react"
-import * as d3 from "d3"
+import d3 from "./d3-tip"
+import * as topojson from "topojson"
+import data from './world_countries.json'
 
-const CountryMap = ({ data })=> {
+const format = d3.format(",")
+
+const CountryMap = ({ mapData, colorMap })=> {
+  console.log("mapData:", mapData)
+  console.log("colorMap:", colorMap)
+  console.log("data:", data)
   const svgRef = useRef()
 
-  useEffect(()=> {
+  console.log(d3.tip())
+
+  useEffect(async()=> {
     const tip = d3.tip()
       .attr('class', 'd3-tip')
       .offset([-10, 0])
       .html(function(d,name) {
-        return "<strong>Country: </strong><span class='details'>" + d.properties.name + "<br></span>" + "<strong>"+ name +": </strong><span class='details'>" + format(d[name]) +"</span>";
+        return `<strong>Country: </strong><span class='details'> ${d.properties.name} <br></span><strong>${name}: </strong><span class='details'> ${format(d[name])}</span>`;
       })
   
-    const margin = {top: -40, right: 0, bottom: 0, left: 0}
+    const margin = {top: 0, right: 0, bottom: 0, left: 0}
     const width = 800 - margin.left - margin.right
     const height = 500 - margin.top - margin.bottom
   
@@ -38,11 +47,10 @@ const CountryMap = ({ data })=> {
   
     const scoreByCountry = {}
 
-
     svg.append("g")
       .attr("class", "countries")
-    .selectAll("path")
-      .data(data.features)
+      .selectAll("path")
+    .data(data.features)
     .enter().append("path")
       .attr("d", path)
       .style("fill", function(d) {
@@ -50,33 +58,34 @@ const CountryMap = ({ data })=> {
       .style('stroke', 'white')
       .style('stroke-width', 1.5)
       .style("opacity",0.8)
-        .style("stroke","white")
-        .style('stroke-width', 0.3)
-        .on('mouseover',function(d){
-          tip.show(d);
+      .style("stroke","white")
+      .style('stroke-width', 0.3)
+      .on('mouseover',function(d){
+        tip.show(d);
 
-          d3.select(this)
-            .style("opacity", 1)
-            .style("stroke","white")
-            .style("stroke-width",3)
-        })
-        .on('mouseout', function(d){
-          tip.hide(d);
+        d3.select(this)
+          .style("opacity", 1)
+          .style("stroke","white")
+          .style("stroke-width",3)
+      })
+      .on('mouseout', function(d){
+        tip.hide(d);
 
-          d3.select(this)
-            .style("opacity", 0.8)
-            .style("stroke","white")
-            .style("stroke-width",0.3);
-        });
+        d3.select(this)
+          .style("opacity", 0.8)
+          .style("stroke","white")
+          .style("stroke-width",0.3);
+      });
 
-    svg.append("path")
-        .data(topojson.mesh(data.features, function(a, b) { return a.properties.name !== b.properties.name; }))
-        .attr("class", "names")
-        .attr("d", path);
-
-  }, [])
+  svg.append("path")
+      .data(topojson.mesh(data.features, function(a, b) { return a.properties.name !== b.properties.name; }))
+      .attr("class", "names")
+      .attr("d", path);
+    }, [])
 
   return(
     <svg ref={svgRef}></svg>
   )
 }
+
+export default CountryMap
