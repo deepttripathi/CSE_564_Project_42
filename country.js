@@ -1,6 +1,9 @@
+// import { abc } from './d3-tip.js'
+
 var format = d3.format(",");
 var selected_feature;
 var dataUrl;
+var country;
 
 var url="http://127.0.0.1:5000/get_map_data/"
 var colorScale="http://127.0.0.1:5000/get_color_map/"
@@ -18,6 +21,9 @@ async function getJson(dataUrl){
     });
     return await response.json();
 }
+
+// var s = d3.tip
+// console.log(s)
 
  var tip = d3.tip()
             .attr('class', 'd3-tip')
@@ -41,8 +47,11 @@ var svg = d3.select("body")
             .append("svg")
             .attr("width", width)
             .attr("height", height)
+            .attr("transform", "translate(290,20)")
             .append('g')
-            .attr('class', 'map');
+            .attr('class', 'map')
+            .attr("transform", "translate(100,20)")
+            ;
 
 var projection = d3.geoMercator()
                    .scale(80)
@@ -73,6 +82,7 @@ async function ready(error, data) {
 
     d3.select("#menu").on("change", function(){
         selected_feature=d3.select("#menu").property("value");
+        // console.log(selected_feature)
         displayMap(selected_feature)    
     } )
 
@@ -81,9 +91,10 @@ async function ready(error, data) {
       dataUrl=url
       dataUrl+=feature
       colorUrl=colorScale+feature
-      console.log(colorUrl)
+      // console.log(colorUrl)
 
       var csvdata=await getJson(dataUrl);  
+      console.log(csvdata)
       var colordata=await getJson(colorUrl);
       
         var optionByCountry={};
@@ -141,16 +152,11 @@ async function ready(error, data) {
         svg.select(".legendThreshold")
         .call(legend);
 
-
-
-
-
         colordata.forEach(function (d)  { 
           colorVal[d.iso]=d[feature+"_scaled"]; 
         });
 
         console.log(colorVal)
-
         data.features.forEach(function(d) { d[feature] = optionByCountry[d.id] });
         svg.append("g")
           .attr("class", "countries")
@@ -181,18 +187,20 @@ async function ready(error, data) {
             .style("opacity", 0.8)
             .style("stroke","white")
             .style("stroke-width",0.3);
+        })
+        .on('click', function(d){
+          console.log(d.properties.name); 
+          country= d.properties.name;
+          // drawBarChart(d.properties.name)
+          drawRadarPlot(d.properties.name); //print selected country name
         });
 
   svg.append("path")
       .data(topojson.mesh(data.features, function(a, b) { return a.id !== b.id; }))
       .attr("class", "names")
-      .attr("d", path);
-
-
-    
-
-        
+      .attr("d", path);  
     }
-}
 
+
+}
 
