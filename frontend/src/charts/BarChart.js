@@ -7,7 +7,7 @@ function BarChart({ height, width, data }){
 
     return (
         <div className="chart">
-            <svg height={height} width={width} ref={ref}>
+            <svg ref={ref}>
             </svg>
         </div>
         
