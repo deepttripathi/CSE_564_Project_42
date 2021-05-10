@@ -1,5 +1,5 @@
 // import { abc } from './d3-tip.js'
-
+import './styles.css';
 var format = d3.format(",");
 var selected_feature;
 var dataUrl;
