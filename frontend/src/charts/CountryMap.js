@@ -37,8 +37,8 @@ const CountryMap = ({ mapData, colorMap })=> {
   
   
     const svg = d3.select(svgRef.current)
-      .attr("width", width)
-      .attr("height", height)
+      // .attr("width", width)
+      // .attr("height", height)
       .append('g')
       .attr('class', 'map')
   
