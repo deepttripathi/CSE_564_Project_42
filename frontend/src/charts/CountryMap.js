@@ -1,9 +1,15 @@
 import React, { useRef, useEffect } from "react"
-import d3 from "./d3-tip"
+// import * as d3Module from "d3"
+import d3 from "./d3-tip-example"
 import * as topojson from "topojson"
 import data from './world_countries.json'
 
 const format = d3.format(",")
+
+// const d3 = {
+//   ...d3Module,
+  
+// }
 
 const CountryMap = ({ mapData, colorMap })=> {
   console.log("mapData:", mapData)
@@ -11,7 +17,7 @@ const CountryMap = ({ mapData, colorMap })=> {
   console.log("data:", data)
   const svgRef = useRef()
 
-  console.log(d3.tip())
+  console.log("d3Tip", d3)
 
   useEffect(async()=> {
     const tip = d3.tip()
