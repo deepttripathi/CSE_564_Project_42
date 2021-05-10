@@ -1,4 +1,5 @@
 import * as d3Module from "d3"
+import {event as currentEvent} from 'd3-selection'
 
 const d3 = {
     ...d3Module
@@ -279,7 +280,8 @@ d3.tip = function() {
     //
     // Returns an Object {n, s, e, w, nw, sw, ne, se}
     function getScreenBBox() {
-      var targetel   = target || d3.event.target;
+      console.log('d3 event:', d3)
+      var targetel   = target || currentEvent.target;
   
       while ('undefined' === typeof targetel.getScreenCTM && 'undefined' === targetel.parentNode) {
           targetel = targetel.parentNode;
