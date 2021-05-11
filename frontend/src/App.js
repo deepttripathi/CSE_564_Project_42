@@ -7,6 +7,11 @@ import Paper from '@material-ui/core/Paper';
 import { green, orange } from '@material-ui/core/colors'
 import Container from '@material-ui/core/Container'
 import Grid from '@material-ui/core/Grid'
+import InputLabel from '@material-ui/core/InputLabel';
+import MenuItem from '@material-ui/core/MenuItem';
+import FormHelperText from '@material-ui/core/FormHelperText';
+import FormControl from '@material-ui/core/FormControl';
+import Select from '@material-ui/core/Select';
 
 
 // import { select, /*transition,*/ line, axisBottom, scaleLinear } from 'd3'
@@ -35,6 +40,13 @@ const useStyles = makeStyles((theme) => ({
     textAlign: 'center',
     color: theme.palette.text.secondary,
   },
+  formControl: {
+    margin: theme.spacing(1),
+    minWidth: 120,
+  },
+  selectEmpty: {
+    marginTop: theme.spacing(2),
+  },
 }));
 
 
@@ -44,6 +56,7 @@ function App() {
   const [mapData, setMapData] = useState([{}])
   const [radialData, setRadialData] = useState([{}])
   const [colorMap, setColorMap] = useState([{}])
+  const [age, setAge] = React.useState('');
   // const [pieData, setPieData] = useState([{}])
   // const [populationData, setPopulationData] = useState([{}])
   // const [religionData, setReligionData] = useState([{}])
@@ -142,6 +155,16 @@ function App() {
   //   const data = await response.json()
   //   return data
   // }
+
+
+  // const mapData_from_api = fetchMapData()
+  // const radialData_from_api = fetchRadialData()
+  // const colorMap_from_api = fetchColorMap()
+
+  // setMapData(mapData_from_api)
+  // setRadialData(radialData_from_api)
+  // setColorMap(colorMap_from_api)
+
   useEffect(async () => {
     //make API calls here
     console.log('start')
@@ -168,9 +191,33 @@ function App() {
 
   const classes = useStyles();
 
+  const handleChange = (event) => {
+    setAge(event.target.value);
+  };
+
   //add an option bar
   return (
     <ThemeProvider theme={theme}>
+
+      <div>
+        <FormControl variant="filled" className={classes.formControl}>
+          <InputLabel id="demo-simple-select-filled-label">Age</InputLabel>
+          <Select
+            labelId="demo-simple-select-filled-label"
+            id="demo-simple-select-filled"
+            value={age}
+            onChange={handleChange}
+          >
+            <MenuItem value="">
+              <em>None</em>
+            </MenuItem>
+            <MenuItem value={10}>Ten</MenuItem>
+            <MenuItem value={20}>Twenty</MenuItem>
+            <MenuItem value={30}>Thirty</MenuItem>
+          </Select>
+        </FormControl>
+      </div>
+
       <Container style={{ padding: "0px", margin: "0px" }}>
 
 
