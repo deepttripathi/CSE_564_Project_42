@@ -181,10 +181,10 @@ export default function CountryMap( { mapData, colorMap }) {
       
     displayMap("Score")
   
-      // d3.select("#menu").on("change", function(){
-      //     selected_feature=d3.select("#menu").property("value");
-      //     // console.log(selected_feature)
-      //     displayMap(selected_feature) })
+      d3.select("#menu").on("change", function(){
+          var selected_feature=d3.select(".list").property("value");
+          console.log(selected_feature)
+          displayMap(selected_feature) })
 
   
   
