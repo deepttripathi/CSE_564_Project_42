@@ -90,12 +90,13 @@ svg {
   background-color: #f6fbfc;
   /* border: 3px; */
   border-color: black;
-  border-collapse: collapse;
+  border-collapse: collapse;  
   padding: 4px;
   font-size: 13px;
   font-family: sans-serif;
   width: auto;
   color: rgb(46, 48, 48);
   z-index: 10;
-display: block;
+  display:inline-block ;
+  overflow: visible;
 }

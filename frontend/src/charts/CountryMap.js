@@ -153,13 +153,7 @@ export default function CountryMap( { mapData, colorMap }) {
       // svgRef.current.append(dropdown);
       //dropdown.id="dropdown";
 
-      // const optionBar = d3.select('.list')
-      //       .selectAll('myOptions')
-      //         .data(options)
-      //       .enter()
-      //         .append('option')
-      //       .text(function (d) { return d; }) // text showed in the menu
-      //       .attr("value", function (d) { return d; })
+      
 
 
     const svg = d3.select(svgRef.current)
@@ -167,14 +161,14 @@ export default function CountryMap( { mapData, colorMap }) {
       .attr("height", height)
       .append('g')
       .attr('class', 'map')
-      
-    svg.select('.list')
-    .selectAll('myOptions')
-      .data(options)
-    .enter()
-      .append('option')
-    .text(function (d) { return d; }) // text showed in the menu
-    .attr("value", function (d) { return d; })
+
+      d3.select('.list')
+      .selectAll('myOptions')
+        .data(options)
+      .enter()
+        .append('option')
+      .text(function (d) { return d; }) // text showed in the menu
+      .attr("value", function (d) { return d; })
 
       const projection = d3.geoMercator()
       .scale(80)
