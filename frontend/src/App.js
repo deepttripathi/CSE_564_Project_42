@@ -2,7 +2,7 @@ import './App.css';
 import React, { useState, /*useRef,*/ useEffect } from 'react'
 
 
-import {ThemeProvider, createMuiTheme, makeStyles} from '@material-ui/core/styles'
+import { ThemeProvider, createMuiTheme, makeStyles } from '@material-ui/core/styles'
 import Paper from '@material-ui/core/Paper';
 import { green, orange } from '@material-ui/core/colors'
 import Container from '@material-ui/core/Container'
@@ -52,39 +52,39 @@ function App() {
   // const svgRef = useRef()
 
   // var t = transition().duration(750)
-  const fetchMapData = async()=> {
-    const response = await fetch('/get_map_data/Score',{
+  const fetchMapData = async () => {
+    const response = await fetch('/get_map_data/Score', {
       method: "GET",
       headers: {
         'Content-Type': 'application/json',
-        "Access-Control-Allow-Origin" : "*", 
-        "Access-Control-Allow-Credentials" : true 
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Credentials": true
       }
     })
     const data = await response.json()
     return data
   }
 
-  const fetchRadialData = async()=> {
-    const response = await fetch('/get_bar_chart_data/India',{
+  const fetchRadialData = async () => {
+    const response = await fetch('/get_bar_chart_data/India', {
       method: "GET",
       headers: {
         'Content-Type': 'application/json',
-        "Access-Control-Allow-Origin" : "*", 
-        "Access-Control-Allow-Credentials" : true 
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Credentials": true
       }
     })
     const data = await response.json()
     return data
   }
 
-  const fetchColorMap = async()=> {
+  const fetchColorMap = async () => {
     const response = await fetch('/get_color_map/Score', {
       method: "GET",
       headers: {
         'Content-Type': 'application/json',
-        "Access-Control-Allow-Origin" : "*", 
-        "Access-Control-Allow-Credentials" : true 
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Credentials": true
       }
     })
     const data = await response.json()
@@ -142,7 +142,7 @@ function App() {
   //   const data = await response.json()
   //   return data
   // }
-  useEffect(async ()=> {
+  useEffect(async () => {
     //make API calls here
     console.log('start')
     const mapData_from_api = await fetchMapData()
@@ -171,42 +171,54 @@ function App() {
   //add an option bar
   return (
     <ThemeProvider theme={theme}>
-      <Container>
+      <Container style={{ padding: "0px", margin: "0px" }}>
 
 
-        <Grid container spacing={3} style={{height: "50vh"}}>
-         <Grid item xs={3}>
-           <Paper className={classes.paper}>
-           <BarChart data={radialData}></BarChart>
-           </Paper>
-         </Grid>
-         <Grid item xs={6}>
-           <Paper className={classes.paper}>
-             <CountryMap mapData={mapData} colorMap={colorMap} />
-             </Paper>
-         </Grid>
-         <Grid item xs={3}>
-           <Paper className={classes.paper}></Paper>
-         </Grid>
+        <Grid container style={{ height: "48vh", width: "100vw" }}>
+          <Grid style={{ height: "100%" }} item xs={3}>
+            <Paper style={{ height: "100%" }} className={classes.paper}>
+              <BarChart data={radialData}></BarChart>
+            </Paper>
+          </Grid>
+          <Grid style={{ height: "100%" }} item xs={6}>
+            <Paper style={{ height: "100%" }} className={classes.paper}>
+              <CountryMap mapData={mapData} colorMap={colorMap} />
+            </Paper>
+          </Grid>
+          <Grid style={{ height: "100%" }} item xs={3}>
+            <Paper style={{ height: "100%" }} className={classes.paper}>
+              <svg style={{ height: "100%", width: "100%" }}>
+              </svg>
+            </Paper>
+          </Grid>
         </Grid>
 
 
-        <Grid container spacing={3} style={{height: "50vh"}}>
-         <Grid item xs>
-           <Paper className={classes.paper}></Paper>
-         </Grid>
-         <Grid item xs={6}>
-           <Paper className={classes.paper}></Paper>
-         </Grid>
-         <Grid item xs>
-           <Paper className={classes.paper}></Paper>
-         </Grid>
+        <Grid container style={{ height: "48vh", width: "100vw" }}>
+          <Grid style={{ height: "100%" }} item xs={3}>
+            <Paper style={{ height: "100%" }} className={classes.paper}>
+              <svg style={{ height: "100%", width: "100%" }}>
+              </svg>
+            </Paper>
+          </Grid>
+          <Grid style={{ height: "100%" }} item xs={6}>
+            <Paper style={{ height: "100%" }} className={classes.paper}>
+              <svg style={{ height: "100%", width: "100%" }}>
+              </svg>
+            </Paper>
+          </Grid>
+          <Grid style={{ height: "100%" }} item xs={3}>
+            <Paper style={{ height: "100%" }} className={classes.paper}>
+              <svg style={{ height: "100%", width: "100%" }}>
+              </svg>
+            </Paper>
+          </Grid>
         </Grid>
 
 
       </Container>
     </ThemeProvider>
-    );
+  );
 }
 
 export default App;
