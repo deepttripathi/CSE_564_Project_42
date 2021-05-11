@@ -15,10 +15,9 @@ import Select from '@material-ui/core/Select';
 
 
 // import { select, /*transition,*/ line, axisBottom, scaleLinear } from 'd3'
-import BarChart from './charts/BarChart'
+// import BarChart from './charts/BarChart'
 import CountryMap from './charts/CountryMap'
-
-
+import RadialChart from './charts/radarChartN'
 
 const theme = createMuiTheme({
   palette: {
@@ -79,7 +78,7 @@ function App() {
   }
 
   const fetchRadialData = async () => {
-    const response = await fetch('/get_bar_chart_data/India', {
+    const response = await fetch('/get_radar_data', {
       method: "GET",
       headers: {
         'Content-Type': 'application/json',
@@ -88,6 +87,7 @@ function App() {
       }
     })
     const data = await response.json()
+    // console.log(data)
     return data
   }
 
@@ -168,6 +168,7 @@ function App() {
   useEffect(async () => {
     //make API calls here
     console.log('start')
+    
     const mapData_from_api = await fetchMapData()
     const radialData_from_api = await fetchRadialData()
     const colorMap_from_api = await fetchColorMap()
@@ -220,11 +221,10 @@ function App() {
 
       <Container style={{ padding: "0px", margin: "0px" }}>
 
-
         <Grid container style={{ height: "48vh", width: "100vw" }}>
           <Grid style={{ height: "100%" }} item xs={3}>
             <Paper style={{ height: "100%" }} className={classes.paper}>
-              <BarChart data={radialData}></BarChart>
+              <RadialChart radialData={radialData}></RadialChart>
             </Paper>
           </Grid>
           <Grid style={{ height: "100%" }} item xs={6}>

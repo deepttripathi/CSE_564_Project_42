@@ -11,121 +11,50 @@ const format = d3.format(",")
 
 // }
 export default function CountryMap({ mapData, colorMap }) {
-  // console.log("mapData:",  mapData)
-  // console.log("colorMap:",  colorMap)
-  // console.log("data:", data)
-
   const svgRef = useRef()
 
-  // console.log("d3Tip", d3)
-
   useEffect(async () => {
+  
+    displayMap(mapData, colorMap, "Score")
+  }, [mapData, colorMap])
 
-    function displayMap(feature) {
-      var optionByCountry = {};
-      var colorVal = {};
+  
 
-      mapData.forEach(function (d) {
-        optionByCountry[d.iso] = +d[feature];
-      });
+    // d3.select("#menu").on("change", function(){
+    //     selected_feature=d3.select("#menu").property("value");
+    //     // console.log(selected_feature)
+    //     displayMap(selected_feature) })
 
-      // max=0
-      // function getMaxVal() {
-      //   return mapData.reduce((max, p) => +p[feature] > max ? +p[feature]: max, mapData[0][feature]);
-      // }
-      // maxVal=getMaxVal()
 
-      // min=-2
-      // function getMinVal() {
-      //   return mapData.reduce((min, p) => +p[feature] < min ? +p[feature]: min, mapData[0][feature]);
-      // }
-      // minVal=getMinVal()
 
-      // range=(maxVal/10)
+  async function displayMap(mapData, colorMap, feature) {
+    // var dataUrl=url
+    // dataUrl+=feature
+    // var colorUrl=colorScale+feature
+    // // console.log(colorUrl)
 
-      // var i;
-      // var label=[]
-      // xmin=minVal
-      // range=range.toFixed(2)
-      // for (i = 0; i < 10; i++) { 
-      //   xmin=Number(xmin).toFixed(2)
-      //   newrange=(Number(xmin)+Number(range)).toFixed(2)
-      //   label[i]=((xmin).toString())+"-"+(newrange.toString());
-      //   xmin=newrange
-      // }
+    // var mapData=await getJson(dataUrl);  
+    // var colorMap=await getJson(colorUrl);
+    
 
-      // if(document.getElementById("legend"))
-      // document.getElementById("legend").remove();
+    // if (document.getElementsByClassName('.map') !=='null'){
+    //   console.log("map present")
+    //   console.log(document.getElementsByClassName('.map').rem)
+    // }
+    // else{
+    //   console.log('map absent')
+    // }
+    // if (document.getElementsByClassName('svgcontainer')){
+    //   console.log("map present")
+      
+    //   // d3.select("#worldmap").remove();
+    //   document.getElementsByClassName('svgcontainer').selectAll("*").remove();
+    //   console.log( document.getElementsByClassName('svgcontainer'));
 
-      // //adding legend
-      // var g = svg.append("g")
-      // .attr("class", "legendThreshold")
-      // .attr("transform", "translate(5,320)");
-      // g.append("text")
-      // .attr("class", "caption")
-      // .attr("id","legend")
-      // .attr("x", 0)
-      // .attr("y", -10)
-      // .text(function (d){
-      //   return feature;
-      // });
+      
 
-      // var legend = d3.legendColor()
-      // .labels(function (d) { return label[d.i]; })
-      // .shapePadding(4)
-      // .scale(color);
-      // svg.select(".legendThreshold")
-      // .call(legend);
-
-      colorMap.forEach(function (d) {
-        colorVal[d.iso] = d[feature + "_scaled"];
-      });
-
-      // console.log(colorVal)
-      data.features.forEach(function (d) { d[feature] = optionByCountry[d.id] });
-      svg.append("g")
-        .attr("class", "countries")
-        .selectAll("path")
-        .data(data.features)
-        .enter().append("path")
-        .attr("d", path)
-        .style("fill", function (d) {
-          return color(colorVal[d.id]);
-        })
-        .style('stroke', 'white')
-        .style('stroke-width', 1.5)
-        .style("opacity", 0.8)
-        // tooltips
-        .style("stroke", "white")
-        .style('stroke-width', 0.3)
-        .on('mouseover', function (d) {
-
-          tip.show(d, feature);
-          d3.select(this)
-            .style("opacity", 1)
-            .style("stroke", "white")
-            .style("stroke-width", 3)
-        })
-        .on('mouseout', function (d) {
-          tip.hide(d, feature);
-
-          d3.select(this)
-            .style("opacity", 0.8)
-            .style("stroke", "white")
-            .style("stroke-width", 0.3);
-        })
-        .on('click', function (d) {
-          console.log(d.properties.name);
-          var country = d.properties.name;
-          // drawBarChart(d.properties.name)
-          // drawRadarPlot(d.properties.name); //print selected country name
-        });
-
-      svg.append("path")
-        .data(topojson.mesh(data.features, function (a, b) { return a.id !== b.id; }))
-        .attr("class", "names")
-        .attr("d", path);
-    }
+    // }
+    // svg.selectAll("*").remove();
 
     const tip = d3.tip()
       .attr('class', 'd3-tip')
@@ -154,15 +83,13 @@ export default function CountryMap({ mapData, colorMap }) {
     // svgRef.current.append(dropdown);
     //dropdown.id="dropdown";
 
-
-
-
     const svg = d3.select(svgRef.current)
       // .attr("width", width)
       // .attr("height", height)
-      .append('g')
       .attr('class', 'map')
-
+      .attr('id', 'worldmap')
+      .append('g')
+      
     d3.select('.list')
       .selectAll('myOptions')
       .data(options)
@@ -179,20 +106,116 @@ export default function CountryMap({ mapData, colorMap }) {
       .projection(projection)
 
     svg.call(tip)
-
-    displayMap("Score")
-
-    // d3.select("#menu").on("change", function(){
-    //     selected_feature=d3.select("#menu").property("value");
-    //     // console.log(selected_feature)
-    //     displayMap(selected_feature) })
+    
 
 
+    var optionByCountry = {};
+    var colorVal = {};
 
-  }, [])
+    mapData.forEach(function (d) {
+      optionByCountry[d.iso] = +d[feature];
+    });
+
+    // max=0
+    // function getMaxVal() {
+    //   return mapData.reduce((max, p) => +p[feature] > max ? +p[feature]: max, mapData[0][feature]);
+    // }
+    // maxVal=getMaxVal()
+
+    // min=-2
+    // function getMinVal() {
+    //   return mapData.reduce((min, p) => +p[feature] < min ? +p[feature]: min, mapData[0][feature]);
+    // }
+    // minVal=getMinVal()
+
+    // range=(maxVal/10)
+
+    // var i;
+    // var label=[]
+    // xmin=minVal
+    // range=range.toFixed(2)
+    // for (i = 0; i < 10; i++) { 
+    //   xmin=Number(xmin).toFixed(2)
+    //   newrange=(Number(xmin)+Number(range)).toFixed(2)
+    //   label[i]=((xmin).toString())+"-"+(newrange.toString());
+    //   xmin=newrange
+    // }
+
+    // if(document.getElementById("legend"))
+    // document.getElementById("legend").remove();
+
+    // //adding legend
+    // var g = svg.append("g")
+    // .attr("class", "legendThreshold")
+    // .attr("transform", "translate(5,320)");
+    // g.append("text")
+    // .attr("class", "caption")
+    // .attr("id","legend")
+    // .attr("x", 0)
+    // .attr("y", -10)
+    // .text(function (d){
+    //   return feature;
+    // });
+
+    // var legend = d3.legendColor()
+    // .labels(function (d) { return label[d.i]; })
+    // .shapePadding(4)
+    // .scale(color);
+    // svg.select(".legendThreshold")
+    // .call(legend);
+
+    colorMap.forEach(function (d) {
+      colorVal[d.iso] = d[feature + "_scaled"];
+    });
+
+    // console.log(colorVal)
+    data.features.forEach(function (d) { d[feature] = optionByCountry[d.id] });
+    svg.append("g")
+      .attr("class", "countries")
+      .selectAll("path")
+      .data(data.features)
+      .enter().append("path")
+      .attr("d", path)
+      .style("fill", function (d) {
+        return color(colorVal[d.id]);
+      })
+      .style('stroke', 'white')
+      .style('stroke-width', 1.5)
+      .style("opacity", 0.8)
+      // tooltips
+      .style("stroke", "white")
+      .style('stroke-width', 0.3)
+      .on('mouseover', function (d) {
+
+        tip.show(d, feature);
+        d3.select(this)
+          .style("opacity", 1)
+          .style("stroke", "white")
+          .style("stroke-width", 3)
+      })
+      .on('mouseout', function (d) {
+        tip.hide(d, feature);
+
+        d3.select(this)
+          .style("opacity", 0.8)
+          .style("stroke", "white")
+          .style("stroke-width", 0.3);
+      })
+      .on('click', function (d) {
+        console.log(d.properties.name);
+        var country = d.properties.name;
+        // drawBarChart(d.properties.name)
+        // drawRadarPlot(d.properties.name); //print selected country name
+      });
+
+    svg.append("path")
+      .data(topojson.mesh(data.features, function (a, b) { return a.id !== b.id; }))
+      .attr("class", "names")
+      .attr("d", path);
+  }
   return (
-    <svg style={{ height: "100%", width: "100%" }} ref={svgRef}>
-      <select className='list'></select>
+    <svg style={{ height: "100%", width: "100%" }} className='svgcontainer' id='svg' ref={svgRef}>
+      <select className='list' ></select>
     </svg>
   )
 }
