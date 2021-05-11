@@ -280,7 +280,6 @@ d3.tip = function() {
     //
     // Returns an Object {n, s, e, w, nw, sw, ne, se}
     function getScreenBBox() {
-      console.log('d3 event:', d3)
       var targetel   = target || currentEvent.target;
   
       while ('undefined' === typeof targetel.getScreenCTM && 'undefined' === targetel.parentNode) {

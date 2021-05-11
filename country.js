@@ -1,6 +1,9 @@
+// import { abc } from './d3-tip.js'
+import './styles.css';
 var format = d3.format(",");
 var selected_feature;
 var dataUrl;
+var country;
 
 var url="http://127.0.0.1:5000/get_map_data/"
 var colorScale="http://127.0.0.1:5000/get_color_map/"
@@ -19,6 +22,9 @@ async function getJson(dataUrl){
     return await response.json();
 }
 
+// var s = d3.tip
+// console.log(s)
+
  var tip = d3.tip()
             .attr('class', 'd3-tip')
             .offset([-10, 0])
@@ -34,17 +40,21 @@ var color = d3.scaleThreshold()
     .domain([1,2,3,4,5,6,7,8,9,10])
     .range(["rgb(247,251,255)", "rgb(222,235,247)", "rgb(198,219,239)", "rgb(158,202,225)", "rgb(107,174,214)", "rgb(66,146,198)","rgb(33,113,181)","rgb(8,81,156)","rgb(8,48,107)","rgb(3,19,43)"]);
 
+
 var path = d3.geoPath();
 
 var svg = d3.select("body")
             .append("svg")
             .attr("width", width)
             .attr("height", height)
+            .attr("transform", "translate(290,20)")
             .append('g')
-            .attr('class', 'map');
+            .attr('class', 'map')
+            .attr("transform", "translate(100,20)")
+            ;
 
 var projection = d3.geoMercator()
-                   .scale(100)
+                   .scale(80)
                   .translate( [width / 2, height / 2]);
 
 var path = d3.geoPath().projection(projection);
@@ -72,6 +82,7 @@ async function ready(error, data) {
 
     d3.select("#menu").on("change", function(){
         selected_feature=d3.select("#menu").property("value");
+        // console.log(selected_feature)
         displayMap(selected_feature)    
     } )
 
@@ -80,9 +91,10 @@ async function ready(error, data) {
       dataUrl=url
       dataUrl+=feature
       colorUrl=colorScale+feature
-      console.log(colorUrl)
+      // console.log(colorUrl)
 
       var csvdata=await getJson(dataUrl);  
+      console.log(csvdata)
       var colordata=await getJson(colorUrl);
       
         var optionByCountry={};
@@ -92,12 +104,59 @@ async function ready(error, data) {
           optionByCountry[d.iso]=+d[feature]; 
         });
 
+        max=0
+        function getMaxVal() {
+          return csvdata.reduce((max, p) => +p[feature] > max ? +p[feature]: max, csvdata[0][feature]);
+        }
+        maxVal=getMaxVal()
+
+        min=-2
+        function getMinVal() {
+          return csvdata.reduce((min, p) => +p[feature] < min ? +p[feature]: min, csvdata[0][feature]);
+        }
+        minVal=getMinVal()
+
+        range=(maxVal/10)
+        
+        var i;
+        var label=[]
+        xmin=minVal
+        range=range.toFixed(2)
+        for (i = 0; i < 10; i++) { 
+          xmin=Number(xmin).toFixed(2)
+          newrange=(Number(xmin)+Number(range)).toFixed(2)
+          label[i]=((xmin).toString())+"-"+(newrange.toString());
+          xmin=newrange
+        }
+        
+        if(document.getElementById("legend"))
+        document.getElementById("legend").remove();
+
+        //adding legend
+        var g = svg.append("g")
+        .attr("class", "legendThreshold")
+        .attr("transform", "translate(5,320)");
+        g.append("text")
+        .attr("class", "caption")
+        .attr("id","legend")
+        .attr("x", 0)
+        .attr("y", -10)
+        .text(function (d){
+          return feature;
+        });
+
+        var legend = d3.legendColor()
+        .labels(function (d) { return label[d.i]; })
+        .shapePadding(4)
+        .scale(color);
+        svg.select(".legendThreshold")
+        .call(legend);
+
         colordata.forEach(function (d)  { 
           colorVal[d.iso]=d[feature+"_scaled"]; 
         });
 
         console.log(colorVal)
-
         data.features.forEach(function(d) { d[feature] = optionByCountry[d.id] });
         svg.append("g")
           .attr("class", "countries")
@@ -128,15 +187,20 @@ async function ready(error, data) {
             .style("opacity", 0.8)
             .style("stroke","white")
             .style("stroke-width",0.3);
+        })
+        .on('click', function(d){
+          console.log(d.properties.name); 
+          country= d.properties.name;
+          // drawBarChart(d.properties.name)
+          drawRadarPlot(d.properties.name); //print selected country name
         });
 
   svg.append("path")
       .data(topojson.mesh(data.features, function(a, b) { return a.id !== b.id; }))
       .attr("class", "names")
-      .attr("d", path);
-
-        
+      .attr("d", path);  
     }
-}
 
+
+}
 

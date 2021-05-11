@@ -3,6 +3,7 @@ import flask
 import pandas as pd
 from flask import render_template, request
 from sklearn import preprocessing
+import numpy as np
 app = Flask(__name__)
 
 
@@ -37,8 +38,15 @@ def get_map_data(feature):
 @app.route('/get_bar_chart_data/<string:country>')
 def get_bar_chart_data(country):
     data = pd.read_csv("final.csv")
-    country_data = data[data['country'] == country]
+    country_data = data[data['country'] == country].drop(['Population','Score','Overall rank','country','Internet Users','Population Rank',
+    'Internet Rank','iso'],axis=1)
     return country_data.to_json(orient='records')
+
+@app.route('/get_radar_data')
+def get_radar_data():
+    data = pd.read_csv("final.csv").drop(['Population','Score','Overall rank','Internet Users','Population Rank',
+    'Internet Rank','iso'],axis=1)
+    return data.to_json(orient='records')
 
 
 @app.route('/get_internet_data/<string:feature>')
@@ -53,12 +61,6 @@ def get_religion_data(feature):
     data = pd.read_csv("final.csv")
     result_df = data[['country', 'percentage_non_religious', feature]]
     return result_df.to_json(orient='records')
-
-
-# x = df.values #returns a numpy array
-# min_max_scaler = preprocessing.MinMaxScaler()
-# x_scaled = min_max_scaler.fit_transform(x)
-# df = pd.DataFrame(x_scaled)
 
 
 @app.route('/get_color_map/<string:feature>')
