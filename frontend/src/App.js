@@ -18,6 +18,7 @@ import Select from '@material-ui/core/Select';
 // import BarChart from './charts/BarChart'
 import CountryMap from './charts/CountryMap'
 import RadialChart from './charts/radarChartN'
+import ParallelChart from "./charts/pcp";
 
 const theme = createMuiTheme({
   palette: {
@@ -56,6 +57,7 @@ function App() {
   const [radialData, setRadialData] = useState([{}])
   const [colorMap, setColorMap] = useState([{}])
   const [feature, setFeature] = useState(['Score'])
+  const [parallelData, setParallelData] = useState([{}])
   // const [pieData, setPieData] = useState([{}])
   // const [populationData, setPopulationData] = useState([{}])
   // const [religionData, setReligionData] = useState([{}])
@@ -64,8 +66,9 @@ function App() {
   // const svgRef = useRef()
 
   // var t = transition().duration(750)
-  const fetchMapData = async () => {
-    const response = await fetch('/get_map_data/Score', {
+  const fetchMapData = async (feature) => {
+    const url='get_map_data/'+feature
+    const response = await fetch(url, {
       method: "GET",
       headers: {
         'Content-Type': 'application/json',
@@ -91,8 +94,9 @@ function App() {
     return data
   }
 
-  const fetchColorMap = async () => {
-    const response = await fetch('/get_color_map/Score', {
+  const fetchColorMap = async (feature) => {
+    const curl='/get_color_map/'+feature
+    const response = await fetch(curl, {
       method: "GET",
       headers: {
         'Content-Type': 'application/json',
@@ -101,6 +105,19 @@ function App() {
       }
     })
     const data = await response.json()
+    return data
+  }
+  const fetchparallelData = async()=> {
+    const response = await fetch('/get_pcp_data',{
+      method: "GET",
+      headers: {
+        'Content-Type': 'application/json',
+        "Access-Control-Allow-Origin" : "*", 
+        "Access-Control-Allow-Credentials" : true 
+      }
+    })
+    const data = await response.json()
+    console.log("fetch mapDta:", data)
     return data
   }
 
@@ -168,10 +185,11 @@ function App() {
   useEffect(async () => {
     //make API calls here
     console.log('start')
-
-    const mapData_from_api = await fetchMapData()
+    console.log('start124', feature )
+    const mapData_from_api = await fetchMapData(feature)
     const radialData_from_api = await fetchRadialData()
-    const colorMap_from_api = await fetchColorMap()
+    const colorMap_from_api = await fetchColorMap(feature)
+    const pcpData_from_api = await fetchparallelData()
     // const pieData_from_api = await fetchPieData()
     // console.log('pieData:', pieData_from_api)
     // const populationData_from_api = await fetchPopulationData()
@@ -184,11 +202,12 @@ function App() {
     setMapData(mapData_from_api)
     setRadialData(radialData_from_api)
     setColorMap(colorMap_from_api)
+    setParallelData(pcpData_from_api)
     // setPieData(pieData_from_api)
     // setPopulationData(populationData_from_api)
     // setReligionData(religionData_from_api)
     // setPcpData(pcpData_from_api)
-  }, [])
+  }, [feature])
 
   const classes = useStyles();
 
@@ -196,13 +215,15 @@ function App() {
     setFeature(event.target.value);
   };
 
+  
+
   //add an option bar
   return (
     <ThemeProvider theme={theme}>
 
       <div>
         <FormControl variant="filled" className={classes.formControl}>
-          <InputLabel id="demo-simple-select-filled-label">Age</InputLabel>
+          <InputLabel id="demo-simple-select-filled-label">Select attribute</InputLabel>
           <Select
             labelId="demo-simple-select-filled-label"
             id="demo-simple-select-filled"
@@ -210,7 +231,7 @@ function App() {
             onChange={handleChange}
           >
             <MenuItem value="">
-              <em>None</em>
+              <em>Select attribute</em>
             </MenuItem>
             <MenuItem value={"Score"}>Score</MenuItem>
             <MenuItem value={"Overall rank"}>Overall rank</MenuItem>
@@ -258,8 +279,9 @@ function App() {
           </Grid>
           <Grid style={{ height: "100%" }} item xs={6}>
             <Paper style={{ height: "100%" }} className={classes.paper}>
-              <svg style={{ height: "100%", width: "100%" }}>
-              </svg>
+              {/* <svg style={{ height: "100%", width: "100%" }}> */}
+              {/* </svg> */}
+              <ParallelChart data={parallelData}/>
             </Paper>
           </Grid>
           <Grid style={{ height: "100%" }} item xs={3}>
