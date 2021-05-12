@@ -27,18 +27,17 @@ const d3 = {
 
 export default function RadialChart({radialData}) {
 
-    // if (svgRef.current.document.getElementsByClassName('.radar')) 
 
     // console.log('Radial data: ', radialData);
     const svgRef = useRef()
 
     useEffect(async () => {
     var cfg = {
-      w: 600, //Width of the circle
-      h: 600, //Height of the circle
+      w: 300, //Width of the circle
+      h: 300, //Height of the circle
       margin: {top: 20, right: 20, bottom: 20, left: 20}, //The margins of the SVG
-      labelFactor: 0.85,  //How much farther than the radius of the outer circle should the labels be placed
-      wrapWidth: 60,      //The number of pixels after which a label needs to be given a new line
+      labelFactor: 0.5,  //How much farther than the radius of the outer circle should the labels be placed
+      wrapWidth: 5,      //The number of pixels after which a label needs to be given a new line
       opacityArea: 0.35,  //The opacity of the area of the blob
       dotRadius: 4,       //The size of the colored circles of each blog
       opacityCircles: 0.1,//The opacity of the circles of each blob
@@ -112,7 +111,9 @@ export default function RadialChart({radialData}) {
   
     var total = cfg.fields.length,            //The number of different axes
       radius = Math.min(cfg.w/2, cfg.h/2),    //Radius of the outermost circle
-      angleSlice = Math.PI * 2 / total;       //The width in radians of each "slice"
+        // radius=150,
+      angleSlice = Math.PI * 2 / total;  
+      console.log("Radius,", radius)     //The width in radians of each "slice"
   
     // Update ranges of scales to match radius.
     scales = scales.map(function(i){
@@ -180,8 +181,10 @@ export default function RadialChart({radialData}) {
         .attr("text-anchor", "middle")
         .attr("transform", "translate(" + radius * cfg.labelFactor + ", 20)")
         .attr("dy", "0.35em")
-        .text(function(d){return d;})
-        .call(wrap, cfg.wrapWidth);
+        .text(function(d){
+            return d;})
+        .call(wrap, cfg.wrapWidth)
+        .attr("fill",'black')
     }
   
     /////////////////////////////////////////////////////////
@@ -305,7 +308,10 @@ export default function RadialChart({radialData}) {
     //Taken from http://bl.ocks.org/mbostock/7555321
     //Wraps SVG text
     function wrap(text, width) {
+        console.log('text',text)
+
       text.each(function() {
+          console.log('text',text)
         var text = d3.select(this),
           words = text.text().split(/\s+/).reverse(),
           word,
@@ -359,7 +365,6 @@ export default function RadialChart({radialData}) {
   
       // Get all data for axis
       var axisData = data.map(function(row){
-        // console.log(row[i])
         return row[i];
       });
   
@@ -409,7 +414,7 @@ export default function RadialChart({radialData}) {
     return ret;
   
   }
-},[])
+},[radialData])
 return(
     <svg style={{ height: "100%", width: "100%" }} className='radar' ref={svgRef}></svg>
     )
