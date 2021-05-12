@@ -55,7 +55,7 @@ function App() {
   const [mapData, setMapData] = useState([{}])
   const [radialData, setRadialData] = useState([{}])
   const [colorMap, setColorMap] = useState([{}])
-  const [age, setAge] = React.useState('');
+  const [feature, setFeature] = useState(['Score'])
   // const [pieData, setPieData] = useState([{}])
   // const [populationData, setPopulationData] = useState([{}])
   // const [religionData, setReligionData] = useState([{}])
@@ -168,7 +168,7 @@ function App() {
   useEffect(async () => {
     //make API calls here
     console.log('start')
-    
+
     const mapData_from_api = await fetchMapData()
     const radialData_from_api = await fetchRadialData()
     const colorMap_from_api = await fetchColorMap()
@@ -193,7 +193,7 @@ function App() {
   const classes = useStyles();
 
   const handleChange = (event) => {
-    setAge(event.target.value);
+    setFeature(event.target.value);
   };
 
   //add an option bar
@@ -206,22 +206,30 @@ function App() {
           <Select
             labelId="demo-simple-select-filled-label"
             id="demo-simple-select-filled"
-            value={age}
+            value={feature}
             onChange={handleChange}
           >
             <MenuItem value="">
               <em>None</em>
             </MenuItem>
-            <MenuItem value={10}>Ten</MenuItem>
-            <MenuItem value={20}>Twenty</MenuItem>
-            <MenuItem value={30}>Thirty</MenuItem>
+            <MenuItem value={"Score"}>Score</MenuItem>
+            <MenuItem value={"Overall rank"}>Overall rank</MenuItem>
+            <MenuItem value={"GDP per capita"}>GDP per capita</MenuItem>
+            <MenuItem value={"Social support"}>Social support</MenuItem>
+            <MenuItem value={"Healthy life expectancy"}>Healthy life expectancy</MenuItem>
+            <MenuItem value={"Freedom to make life choices"}>Freedom to make life choices</MenuItem>
+            <MenuItem value={"Generosity"}>Generosity</MenuItem>
+            <MenuItem value={"Perceptions of corruption"}>Perceptions of corruption</MenuItem>
+            <MenuItem value={"Population"}>Population</MenuItem>
+            <MenuItem value={"Percentage"}>Percentage</MenuItem>
+            <MenuItem value={"percentage_non_religious"}>Percentage non-religious</MenuItem>
           </Select>
         </FormControl>
       </div>
 
       <Container style={{ padding: "0px", margin: "0px" }}>
 
-        <Grid container style={{ height: "48vh", width: "100vw" }}>
+        <Grid container style={{ height: "47vh", width: "100vw" }}>
           <Grid style={{ height: "100%" }} item xs={3}>
             <Paper style={{ height: "100%" }} className={classes.paper}>
               <RadialChart radialData={radialData}></RadialChart>
@@ -229,7 +237,7 @@ function App() {
           </Grid>
           <Grid style={{ height: "100%" }} item xs={6}>
             <Paper style={{ height: "100%" }} className={classes.paper}>
-              <CountryMap mapData={mapData} colorMap={colorMap} />
+              <CountryMap mapData={mapData} colorMap={colorMap} feature={feature} />
             </Paper>
           </Grid>
           <Grid style={{ height: "100%" }} item xs={3}>
@@ -241,7 +249,7 @@ function App() {
         </Grid>
 
 
-        <Grid container style={{ height: "48vh", width: "100vw" }}>
+        <Grid container style={{ height: "40vh", width: "100vw" }}>
           <Grid style={{ height: "100%" }} item xs={3}>
             <Paper style={{ height: "100%" }} className={classes.paper}>
               <svg style={{ height: "100%", width: "100%" }}>

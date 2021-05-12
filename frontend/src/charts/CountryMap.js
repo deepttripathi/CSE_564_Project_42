@@ -10,20 +10,21 @@ const format = d3.format(",")
 //   ...d3Module,
 
 // }
-export default function CountryMap({ mapData, colorMap }) {
+export default function CountryMap({ mapData, colorMap, feature }) {
+  console.log('Feature:', feature)
   const svgRef = useRef()
 
   useEffect(async () => {
-  
+
     displayMap(mapData, colorMap, "Score")
   }, [mapData, colorMap])
 
-  
 
-    // d3.select("#menu").on("change", function(){
-    //     selected_feature=d3.select("#menu").property("value");
-    //     // console.log(selected_feature)
-    //     displayMap(selected_feature) })
+
+  // d3.select("#menu").on("change", function(){
+  //     selected_feature=d3.select("#menu").property("value");
+  //     // console.log(selected_feature)
+  //     displayMap(selected_feature) })
 
 
 
@@ -35,7 +36,7 @@ export default function CountryMap({ mapData, colorMap }) {
 
     // var mapData=await getJson(dataUrl);  
     // var colorMap=await getJson(colorUrl);
-    
+
 
     // if (document.getElementsByClassName('.map') !=='null'){
     //   console.log("map present")
@@ -46,12 +47,12 @@ export default function CountryMap({ mapData, colorMap }) {
     // }
     // if (document.getElementsByClassName('svgcontainer')){
     //   console.log("map present")
-      
+
     //   // d3.select("#worldmap").remove();
     //   document.getElementsByClassName('svgcontainer').selectAll("*").remove();
     //   console.log( document.getElementsByClassName('svgcontainer'));
 
-      
+
 
     // }
     // svg.selectAll("*").remove();
@@ -89,7 +90,7 @@ export default function CountryMap({ mapData, colorMap }) {
       .attr('class', 'map')
       .attr('id', 'worldmap')
       .append('g')
-      
+
     d3.select('.list')
       .selectAll('myOptions')
       .data(options)
@@ -106,7 +107,7 @@ export default function CountryMap({ mapData, colorMap }) {
       .projection(projection)
 
     svg.call(tip)
-    
+
 
 
     var optionByCountry = {};
