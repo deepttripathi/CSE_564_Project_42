@@ -1,103 +1,212 @@
-import React, { useEffect, useRef } from "react"
-import d3 from "./d3-tip-example"
+import React, { useRef, useEffect } from "react"
+import * as d3Module from "d3"
+import {event} from 'd3'
 
-function RandomData() {
-    const data = [...Array(100)].map((e, i) => {
-        return {
-            x: Math.random() * 40,
-            y: Math.random() * 40,
-            temparature: Math.random() * 500
-        };
-    });
-    return data;
+
+const d3 = {
+    ...d3Module
 }
 
-export default function Scatter() {
 
-    const ref = useRef()
-    const margin = {
-        top: 40,
-        bottom: 40,
-        left: 40,
-        right: 40
+export default function ScatterPlot({data, feature}) {
+
+
+    console.log("data scatter :", data)
+    const svgRef = useRef()
+
+    useEffect(async () => {
+
+    var color= d3.scaleOrdinal(d3.schemeCategory10)
+        
+    var xdata = [];
+    for (var i=0; i<data.length ; i++){
+        if ((data[i][feature] ==0 || (data[i][feature] == null )) ||  (data[i]['Percentage']==0 || (data[i]['Percentage'] == null ))){
+            continue
+        }
+        else{
+            xdata[i] = data[i]['Percentage']
+        }
+        
     }
 
-    const xValue = d => d.x
-    const yValue = d => d.y
+    var ydata = [];
+    for (var j=0; j<data.length ; j++){
+        if ((data[j][feature] ==0 || (data[j][feature] == null )) ||  (data[j]['Percentage']==0 || (data[j]['Percentage'] == null ))){
+            continue
+        }
+        else{
+            if (feature == 'Population')
+                ydata[j] = data[j][feature]/100000
+            else{
+                ydata[j] = data[j][feature]
+            }
+        }
+    }
 
-    const data = RandomData()
+    var svg = d3.select(svgRef.current)
+        .attr("id","scattersvg")
+        .attr("class","scatter")
 
-    useEffect(() => {
-        const svg = d3.select(ref.current)
-        const width = +svg.attr('width')
-        const height = +svg.attr('height')
-        const circleRadius = 5
+    svg.selectAll("*").remove();
+    //    var margin = 200,
+        var width = 220,
+         height = 230;
 
-        const innerWidth = width - margin.left - margin.right;
-        const innerHeight = height - margin.top - margin.bottom;
+     
+    var x = d3.scaleLinear().range([0, width]);
+    var y = d3.scaleLinear().range([height, 0]);
+    var g = svg.append("g")
+    .attr("transform", "translate(" + 80 + "," + 5 + ")");
 
-        const xScale = d3.scaleLinear()
-            .domain(d3.extent(data, d => d.x))
-            .range([0, innerWidth])
+    var xmin = d3.min(xdata);
+    var xmax = d3.max(xdata);
+    x.domain([xmin-0.15, xmax]);
 
-        const yScale = d3.scaleLinear()
-            .domain(d3.extent(data, d => d.y))
-            .range([innerHeight, 0])
+    var xAxis = g.append("g")
+      .attr("transform", "translate(0," + height + ")")
+          .call(d3.axisBottom(x))
+          .attr("font-size","11px")
 
-        const g = svg.append('g')
-            .attr('transform', `transform(${margin.left}, ${margin.top})`)
+    g.append("g")
+    .append("text")
+    // .attr("transform", "translate(0, 0)")
+     .attr("y", 275)
+     .attr("x", width/2)
+     .attr("text-anchor", "middle")
+     .attr("fill", "black")
+     .attr("font-family", "sans-serif")
+     .attr("font-size", "12px")
+     .text("Internet users(%)")
+     .attr('font-weight','bold');
 
-        const xAxis = d3.axisBottom(xScale)
-            .tickSize(-innerHeight)
-            .tickPadding(15)
+      var ymin = d3.min(ydata)
+      var ymax = d3.max(ydata)
+      y.domain([0, ymax]);
 
-        const yAxis = d3.axisLeft(yScale)
-            .tickSize(-innerWidth)
-            .tickPadding(10);
+      g.append("g")
+          .call(d3.axisLeft(y).tickFormat(function(d){
+              return d;
+          }).ticks(10))
+          .attr("font-size","11px")
 
-        const yAxisG = g.append('text').call(yAxis)
-        yAxisG.selectAll('.domain').remove()
-
-        yAxisG.append('text')
-            .attr('class', 'axis-label')
-            .attr('y', -30)
-            .attr('x', -innerHeight / 2)
-            .attr('fill', 'black')
-            .attr('transform', `rotate(-90)`)
-            .attr('text-anchor', 'middle')
-
-        const xAxisG = g.append('g').call(xAxis)
-            .attr('transform', `translate(0,${innerHeight})`)
-
-        xAxisG.select('.domain').remove()
-
-        xAxisG.append('text')
-            .attr('class', 'axis-label')
-            .attr('y', 55)
-            .attr('x', innerWidth / 2)
-            .attr('fill', 'black')
-
-        g.selectAll('circle').data(data)
-            .enter().append('circle')
-            .attr('cy', d => yScale(yValue(d)))
-            .attr('cx', d => xScale(xValue(d)))
-            .attr('r', circleRadius);
-
-        g.selectAll(".circles")
-            .data(data)
-            .enter()
-            .append("circle")
-            .attr("r", 3)
-            .attr("cx", d => xScale(d.x))
-            .attr("cy", d => yScale(d.y))
-            .attr("fill", "black")
+      g.append("g")
+        .append("text")
+        .attr("transform", "rotate(-90)")
+        .attr("y", 30)
+        .attr("x", -150)
+        .attr("dy", "-5.1em")
+        .attr("text-anchor", "middle")
+        .attr("fill", "black")
+        .attr("font-family", "sans-serif")
+        .attr("font-size", "12px")
+        .text(feature)
+        .attr('font-weight','bold');
 
 
-    }, [data])
+     g.append("g")
+         .call(d3.axisLeft(y).tickFormat("").ticks(10).tickSizeInner(-width))
+         .attr("class", "grid");
+      
+    var clip = g.append("defs").append("svg:clipPath")
+         .attr("id", "clip1")
+         .append("svg:rect")
+         .attr("width", 230 )
+         .attr("height", 500 )
+         .attr("x", -1)
+         .attr("y", -10);
 
-    return (
-        <svg style={{ height: "100%", width: "100%" }} className='svgcontainer' id='svg' ref={ref}>
-        </svg>
+        //  var scatter = g.append('g')
+    var brush = d3.brushX()                 // Add the brush feature using the d3.brush function
+        .extent( [ [0,0], [width,height] ] ) // initialise the brush area: start at 0,0 and finishes at width,height: it means I select the whole graph area
+        .on("end", updateChart) 
+
+      var scatter = g.append('g')
+        .attr("clip-path", "url(#clip1)")
+
+    scatter
+        .selectAll("circle")
+        .data(xdata)
+        .enter()
+        .append("circle")
+        .attr("cx", function (d,i) { return x(xdata[i]); } )
+        .attr("cy", function (d,i) { return y(ydata[i]); } )
+        .attr("r", 4)
+        .style("fill", function(d,i){
+            // console.log(color[jsdata["clusterId"][i]]+"---"+jsdata["clusterId"][i])
+              return color(data[i]['clusterId']);
+          })
+        .style("opacity", 0.7);
+
+            // Add the brushing
+    scatter
+        .append("g")
+          .attr("class", "brush")
+          .call(brush);
+  
+    
+    // A function that set idleTimeOut to null
+    var idleTimeout
+    function idled() { idleTimeout = null; }
+  
+    // A function that update the chart for given boundaries
+    function updateChart() {
+
+    var extent = event.selection
+
+
+    // If no selection, back to initial coordinate. Otherwise, update X axis domain
+    if(!extent){
+        if (!idleTimeout) return idleTimeout = setTimeout(idled, 350); // This allows to wait a little bit
+        x.domain([ xmin-0.15, xmax])
+        }else{
+            x.domain([ x.invert(extent[0]), x.invert(extent[1]) ])
+            scatter.select(".brush").call(brush.move, null) // This remove the grey brush area as soon as the selection has been done
+    }
+
+    // Update axis and circle position
+    xAxis.transition().duration(1000).call(d3.axisBottom(x))
+    scatter
+        .selectAll("circle")
+        .transition().duration(1000)
+        .attr("cx", function (d,i) { return x(xdata[i]); } )
+        .attr("cy", function (d,i) { return y(ydata[i]); } )
+
+    }    
+    var keys = ["Cluster 0", "Cluster 1", "Cluster 2"]
+        
+        //   Add one dot in the legend for each name.
+    g.selectAll("mydots")
+    .data(keys)
+    .enter()
+    .append("circle")
+        .attr("cx", -77)
+        .attr("cy", function(d,i){ return 0 + i*16}) // 100 is where the first dot appears. 25 is the distance between dots
+        .attr("r", 3)
+        .style("fill", function(d, i){ 
+        const index = keys.findIndex(dim => dim === d);
+        // console.log('color log', index )
+        return color(index)
+    })
+          
+          // Add one dot in the legend for each name.
+    g.selectAll("mylabels")
+    .data(keys)
+    .enter()
+    .append("text")
+        .attr("x", -74)
+        .attr("y", function(d,i){ return 0 + i*16}) // 100 is where the first dot appears. 25 is the distance between dots
+        .style("fill", "black")
+        .text(function(d){ return d})
+        .attr("text-anchor", "left")
+        .style("alignment-baseline", "middle")
+        .style("font-size","11px")
+        .attr('font-weight','bold');
+
+
+
+
+    },[data, feature])
+    return(
+        <svg style={{ height: "100%", width: "100%" }} className='scatter' id='scatterid' ref={svgRef}></svg>
     )
-
 }
