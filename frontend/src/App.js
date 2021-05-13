@@ -22,6 +22,7 @@ import RadialChart from './charts/radarChartN'
 import ParallelChart from "./charts/pcp"
 import ScatterPlot from './charts/scatterplot'
 import ScatterPlot1 from './charts/scatterPlot1'
+import Piechart from './charts/Piechart';
 
 const theme = createMuiTheme({
   palette: {
@@ -63,7 +64,7 @@ function App() {
   const [feature, setFeature] = useState(['Score'])
   const [parallelData, setParallelData] = useState([])
   const [scatterData, setScatterData] = useState([{}])
-  const [pieData, setPieData] = useState([{}])
+  const [pieData, setPieData] = useState([])
   // const [countryData, setCountryData] = useState([{}])
   // const [pieData, setPieData] = useState([{}])
   // const [populationData, setPopulationData] = useState([{}])
@@ -230,6 +231,7 @@ function App() {
     setColorMap(colorMap_from_api)
     setParallelData(pcpData_from_api)
     setScatterData(scatterData_from_api)
+    setPieData([21, 4, 18, 16, 22, 6, 9, 34, 12, 6])
     // setCountryData(countryData_from_api)
     // setPieData(pieData_from_api)
     // setPopulationData(populationData_from_api)
@@ -251,7 +253,7 @@ function App() {
 
       <div style={{ display: 'inline' }}>
         <div style={{ textAlign: 'center' }}>
-          <h3>Happiness, Internet and Religion</h3>
+          <h2>Happiness, Internet and Religion</h2>
         </div>
         <FormControl className={classes.formControl}>
           <Select
@@ -281,7 +283,7 @@ function App() {
 
       <Container style={{ padding: "0px", margin: "0px" }}>
 
-        <Grid container style={{ height: "47vh", width: "100vw" }}>
+        <Grid container style={{ height: "45vh", width: "100vw" }}>
           <Grid style={{ height: "100%" }} item xs={3}>
             <Paper style={{ height: "100%" }} className={classes.paper} variant={"outlined"}>
               <RadialChart radialData={radialData} radialCountry={radialCountry} ></RadialChart>
@@ -308,8 +310,7 @@ function App() {
           </Grid>
           <Grid style={{ height: "100%" }} item xs={3}>
             <Paper style={{ height: "100%" }} className={classes.paper} variant={"outlined"}>
-              <svg style={{ height: "100%", width: "100%" }}>
-              </svg>
+              <Piechart data={pieData} />
             </Paper>
           </Grid>
           <Grid style={{ height: "100%" }} item xs={3}>

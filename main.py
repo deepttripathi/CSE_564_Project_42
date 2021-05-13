@@ -93,8 +93,10 @@ def get_radar_data():
 
 @app.route('/get_pcp_data')
 def get_pcp_data():
+    data_final = pd.read_csv("final.csv")
     data = pd.read_csv("new.csv").drop(['Overall rank', 'Population Rank',
                                         'Internet Rank'], axis=1)
+    data["Regional indicator"] = data_final["Regional indicator"]
     return data.to_json(orient='records')
 
 

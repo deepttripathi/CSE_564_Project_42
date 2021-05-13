@@ -1,65 +1,104 @@
 import React, { useEffect, useRef } from 'react'
 import d3 from './d3-tip-example'
 
-export default function Piechart({ pieData }) {
+export default function Piechart({ data }) {
     const svgRef = useRef()
 
-    const outerRadius = 100
-    const innerRadius = 50
-
-    const margin = {
-        top: 50, right: 50, bottom: 50, left: 50
-    }
-
-    const width = 2 * outerRadius + margin.left + margin.right;
-    const height = 2 * outerRadius + margin.top + margin.bottom;
-
-    const colorScale = d3
-        .scaleSequential()
-        .interpolator(d3.interpolateCool)
-        .domain([0, pieData.length]);
-
+    // console.log('pieData', pieData)
 
     useEffect(() => {
-        drawChart();
-    }, [pieData])
 
-    function drawChart() {
-        d3.select('#svgcontainer')
-            .remove()
+        if (data.length == 0)
+            return
 
-        const svg = d3.select(svgRef.current)
-            .append('g')
-            .attr('transform', `translate(${width / 2}, ${height / 2})`)
+        var pieDimensions = ["Western Europe", "North America and ANZ", "Middle East and North Africa", "Central and Eastern Europe", "Latin America and Caribbean", "East Asia", "Southeast Asia", "Sub-Saharan Africa", "Commonwealth of Independent States", "South Asia"]
 
-        const arcGenerator = d3.arc()
-            .innerRadius(innerRadius)
-            .outerRadius(outerRadius)
 
-        const pieGenerator = d3.pie()
-            .padAngle(0)
-            .value(d => d.value)
+        var modifiedData = []
+        var modifiedDimension = []
+        for (var i = 0; i < 10; i++) {
+            if (data[i] != 0) {
+                modifiedData.push(data[i])
+                modifiedDimension.push(pieDimensions[i])
+            }
+        }
 
-        const arc = svg.selectAll()
-            .data(pieGenerator(pieData))
-            .enter()
+        console.log('modified data:', modifiedData)
+        console.log('modified dimension', modifiedDimension)
 
-        arc.append('path')
-            .attr('d', arcGenerator)
-            .style('fill', (_, i) => colorScale(i))
-            .style('stroke', '#ffffff')
-            .style('stroke-width', 0)
 
-        arc.append('text')
-            .attr('text-anchor', 'middle')
-            .attr('alignment-baseline', 'middle')
-            .text((d) => d.data.label)
-            .style('fill', (_, i) => colorScale(pieData.length - i))
-            .attr('transform', (d) => {
-                const [x, y] = arcGenerator.centroid(d);
-                return `translate(${x}, ${y})`;
+        var width = 400,
+            height = 300,
+            radius = Math.min(width, height) / 2;
+
+        const color = d3.scaleOrdinal().range(d3.schemeCategory10)
+
+
+        var arc = d3.arc()
+            .outerRadius(radius - 10)
+            .innerRadius(0);
+
+        var labelArc = d3.arc()
+            .outerRadius(radius - 40)
+            .innerRadius(radius - 40);
+
+        var pie = d3.pie()
+            .sort(null)
+            .value(function (d) { return d; });
+
+        var svg = d3.select(svgRef.current)
+            .append("g")
+            .attr("transform", "translate(" + 165 + "," + height / 2 + ")");
+
+        var g = svg.selectAll(".arc")
+            .data(pie(modifiedData))
+            .enter().append("g")
+            .attr("class", "arc");
+
+        var div = g.append('div').attr('class', 'tool').style('opacity', 0)
+
+
+        var focusText = g.append('g').append('text').style('opacity', 0)
+            .attr('font-size', '13px')
+
+
+        g.append("path")
+            .attr("d", arc)
+            .style("fill", function (d, i) { return color(i); })
+            .style('opacity', '0.6')
+            .on('mouseover', (d, i) => {
+
+                focusText.style('opacity', 1)
+                div.transition()
+                    .duration(500)
+                    .style("opacity", 0);
+                div.transition()
+                    .duration(200)
+                    .style("opacity", .9);
+                focusText
+                    .html(modifiedDimension[i])
+                    .attr("x", -70)
+                    .attr("y", -141)
             })
-    }
+            .on("mouseout", function (d) {
+
+                div.transition()
+                    .duration(200)
+                    .style("opacity", 0);
+                focusText.style('opacity', 0)
+            })
+
+        d3.select(this)
+            .append('text', modifiedDimension[i])
+
+        g.append("text")
+            .attr("transform", function (d) { return "translate(" + labelArc.centroid(d) + ")"; })
+            .attr("dy", ".35em")
+            .text(function (d, i) {
+                console.log(d.modifiedData)
+                return modifiedData[i];
+            });
+    }, [data])
 
     return (
         <svg style={{ height: "100%", width: "100%" }} id='svgcontainer' id='svg' ref={svgRef}>

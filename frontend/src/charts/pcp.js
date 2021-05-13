@@ -37,6 +37,8 @@ export default function ParallelChart({ data, setPieData }) {
 
         var updatedDimensions = ['Score', 'GDP', 'Social', 'Health', 'Freedom', 'Generosity', 'Corruption', 'Non-religious', 'Internet%', 'Population']
 
+        var pieDimensions = ["Western Europe", "North America and ANZ", "Middle East and North Africa", "Central and Eastern Europe", "Latin America and Caribbean", "East Asia", "Southeast Asia", "Sub-Saharan Africa", "Commonwealth of Independent States", "South Asia"]
+
         x.domain(dimensions);
 
 
@@ -143,6 +145,7 @@ export default function ParallelChart({ data, setPieData }) {
             .attr("width", 16);
         // });
 
+
         function position(d) {
             var v = dragging[d];
             return v == null ? x(d) : v;
@@ -180,17 +183,21 @@ export default function ParallelChart({ data, setPieData }) {
             });
             console.log(actives)
             console.log(data)
-            const pie = [...data]
+
+
+            var pie = [...data]
             console.log("pie before:", pie)
             for (var i = 0; i < actives.length; i++) {
-                data.forEach((p, j) => {
-                    if ((y[actives[i].dimension](p[actives[i].dimension]) < actives[i].extent[0]) || (y[actives[i].dimension](p[actives[i].dimension]) > actives[i].extent[1])) {
-                        console.log("p dimension:", (p[actives[i].dimension]))
-                        console.log("0 range:", actives[i].extent[0])
-                        console.log("1 range:", actives[i].extent[1])
-                        pie.slice(j, 1)
-                    }
+                pie = pie.filter((p, j) => {
+                    return !(p[actives[i].dimension] > y[actives[i].dimension].invert(actives[i].extent[0]) || p[actives[i].dimension] < y[actives[i].dimension].invert(actives[i].extent[1]))
+                    // {
+                    //     console.log(p[actives[i].dimension])
+                    //     console.log("min:", y[actives[i].dimension].invert(actives[i].extent[0]))
+                    //     console.log("max:", y[actives[i].dimension].invert(actives[i].extent[1]))
+                    //     pie.slice(j, 1)
+                    // }
                 })
+                console.log("pie after 1 loop", pie)
                 // for (var j = 0; j < pie.length; j++) {
                 //     // console.log("dimension:", actives[i])
                 //     // console.log("y extent 0:", y[actives[i].dimension].invert(actives[i].extent[0]))
@@ -202,10 +209,16 @@ export default function ParallelChart({ data, setPieData }) {
                 //     }
                 // }
             }
+
             console.log("pie after: ", pie)
-            setPieData(pie)
+            var count = new Array(10).fill(0)
+            pie.forEach((p, k) => {
+                const index = pieDimensions.findIndex(dim => dim === p['Regional indicator'])
+                count[index]++
+            })
+            console.log("count", count)
+            setPieData(count)
         }
-        console.log('hi')
     }, [data])
     return (
         <svg style={{ height: "100%", width: "100%" }} ref={svgRef}></svg>
