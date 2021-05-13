@@ -70,8 +70,6 @@
         pointer-events:none;
       }*/
 
-
-
 .details {
   color: white;
 }
@@ -90,18 +88,16 @@
   background-color: #f6fbfc;
   /* border: 3px; */
   border-color: black;
-  border-collapse: collapse;  
+  border-collapse: collapse;
   padding: 4px;
   font-size: 13px;
   font-family: sans-serif;
   width: auto;
   color: rgb(46, 48, 48);
   z-index: 10;
-  display:inline-block ;
+  display: inline-block;
   overflow: visible;
 }
-
-
 
 .background path {
   fill: none;
@@ -115,7 +111,7 @@
 }
 
 .brush .extent {
-  fill-opacity: .3;
+  fill-opacity: 0.3;
   stroke: #fff;
   shape-rendering: crispEdges;
 }
@@ -124,22 +120,22 @@
 .axis path {
   display: inline;
   fill: none;
-  stroke: #000;
+  stroke: hsl(180, 1%, 39%);
   shape-rendering: crispEdges;
 }
 
 .axis text {
   cursor: move;
-  font-weight: bold;
+  /* font-weight: bold; */
+  fill: hsl(180, 1%, 39%);
 }
 
 .grid line {
   stroke: hsl(180, 1%, 39%);
-  stroke-dasharray:5,5;
+  stroke-dasharray: 5, 5;
   stroke-opacity: 0.6;
 }
-.axisPcp{
+.axisPcp {
   font-weight: bold;
   fill: black;
-
 }

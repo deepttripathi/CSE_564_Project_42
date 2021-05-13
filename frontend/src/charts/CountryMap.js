@@ -4,7 +4,7 @@ import d3 from "./d3-tip-example"
 import * as topojson from "topojson"
 import data from './world_countries.json'
 // import * as d3legend from "./d3-legend";
-import {event, zoom as zoomM} from 'd3'
+import { event, zoom as zoomM } from 'd3'
 const format = d3.format(",")
 
 // const d3 = {
@@ -15,10 +15,9 @@ export default function CountryMap({ mapData, colorMap, feature, setRadialCountr
   const svgRef = useRef()
 
   useEffect(async () => {
-    console.log('Feature:', feature)
 
     displayMap(mapData, colorMap, feature)
-  }, [mapData, colorMap,feature])
+  }, [mapData, colorMap, feature])
 
 
 
@@ -46,7 +45,7 @@ export default function CountryMap({ mapData, colorMap, feature, setRadialCountr
       .domain([1, 2, 3, 4, 5, 6, 7, 8, 9, 10])
       .range(["rgb(247,251,255)", "rgb(222,235,247)", "rgb(198,219,239)", "rgb(158,202,225)", "rgb(107,174,214)", "rgb(66,146,198)", "rgb(33,113,181)", "rgb(8,81,156)", "rgb(8,48,107)", "rgb(3,19,43)"])
 
-    
+
 
     // var options = ["Score", "Overall rank", "GDP per capita", "Social support", "Healthy life expectancy", "Freedom to make life choices", "Generosity",
     //   "Perceptions of corruption", "Population", "Percentage", "percentage_non_religious"]
@@ -59,9 +58,9 @@ export default function CountryMap({ mapData, colorMap, feature, setRadialCountr
       .attr('id', 'worldmap')
       .append('g')
 
-      // const width = +svg.attr('width')
-      // const height = +svg.attr('height')
-    
+    // const width = +svg.attr('width')
+    // const height = +svg.attr('height')
+
 
 
     // d3.select('.list')
@@ -84,10 +83,10 @@ export default function CountryMap({ mapData, colorMap, feature, setRadialCountr
     var optionByCountry = {};
     var colorVal = {};
 
-    console.log('percentage',mapData)
-    
+    console.log('percentage', mapData)
+
     mapData.forEach(function (d) {
-      if (feature == 'Percentage'){
+      if (feature == 'Percentage') {
         optionByCountry[d.iso] = d[feature];
       }
       else
@@ -148,8 +147,9 @@ export default function CountryMap({ mapData, colorMap, feature, setRadialCountr
 
     // console.log(colorVal)
     data.features.forEach(function (d) { d[feature] = optionByCountry[d.id] });
-     svg.append("g")
+    svg.append("g")
       .attr("class", "countries")
+      .style('overflow', 'auto')
       .selectAll("path")
       .data(data.features)
       .enter().append("path")
@@ -187,25 +187,27 @@ export default function CountryMap({ mapData, colorMap, feature, setRadialCountr
         // drawRadarPlot(d.properties.name); //print selected country name
       });
 
-   svg.append("path")
+    svg.append("path")
       .data(topojson.mesh(data.features, function (a, b) { return a.id !== b.id; }))
       .attr("class", "names")
       .attr("d", path);
 
     let zoom = zoomM()
-        .scaleExtent([1, 1.25])
-        .translateExtent([[-220, -50], [880, 420]])
-        .on('zoom', () => {
-            console.log('hello dere',+svg.attr('height'));
-            // var g= d3.select(this)
-            // svg.selectAll('paths')
-            // svg.selectAll('g')
-              svg.attr('transform', event.transform)
-        });
+      .scaleExtent([1, 1.25])
+      .translateExtent([[-220, -50], [880, 420]])
+      .on('zoom', () => {
+        // console.log('hello dere', +svg.attr('height'));
+        // var g= d3.select(this)
+        // svg.selectAll('paths')
+        // svg.selectAll('g')
+        svg.attr('transform', event.transform)
+      });
     svg.call(zoom);
   }
   return (
-    <svg style={{ height: "100%", width: "100%" }} className='svgcontainer' id='svg' ref={svgRef}>
-    </svg>
+    <div style={{ height: "100%", width: "100%", overflow: "visible" }}>
+      <svg style={{ height: "100%", width: "100%" }} className='svgcontainer' id='svg' ref={svgRef}>
+      </svg>
+    </div>
   )
 }

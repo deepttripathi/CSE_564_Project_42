@@ -12,6 +12,7 @@ import MenuItem from '@material-ui/core/MenuItem';
 import FormHelperText from '@material-ui/core/FormHelperText';
 import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
+import Typography from '@material-ui/core/Typography';
 
 
 // import { select, /*transition,*/ line, axisBottom, scaleLinear } from 'd3'
@@ -60,8 +61,9 @@ function App() {
   const [radialCountry, setRadialCountry] = useState('')
   const [colorMap, setColorMap] = useState([{}])
   const [feature, setFeature] = useState(['Score'])
-  const [parallelData, setParallelData] = useState([{}])
+  const [parallelData, setParallelData] = useState([])
   const [scatterData, setScatterData] = useState([{}])
+  const [pieData, setPieData] = useState([{}])
   // const [countryData, setCountryData] = useState([{}])
   // const [pieData, setPieData] = useState([{}])
   // const [populationData, setPopulationData] = useState([{}])
@@ -72,7 +74,7 @@ function App() {
 
   // var t = transition().duration(750)
   const fetchMapData = async (feature) => {
-    const url='get_map_data/'+feature
+    const url = 'get_map_data/' + feature
     const response = await fetch(url, {
       method: "GET",
       headers: {
@@ -86,7 +88,7 @@ function App() {
   }
 
   const fetchScatterData = async (feature) => {
-    const url='get_scatter_data/'+feature
+    const url = 'get_scatter_data/' + feature
     const response = await fetch(url, {
       method: "GET",
       headers: {
@@ -114,7 +116,7 @@ function App() {
   }
 
   const fetchColorMap = async (feature) => {
-    const curl='/get_color_map/'+feature
+    const curl = '/get_color_map/' + feature
     const response = await fetch(curl, {
       method: "GET",
       headers: {
@@ -126,13 +128,13 @@ function App() {
     const data = await response.json()
     return data
   }
-  const fetchparallelData = async()=> {
-    const response = await fetch('/get_pcp_data',{
+  const fetchparallelData = async () => {
+    const response = await fetch('/get_pcp_data', {
       method: "GET",
       headers: {
         'Content-Type': 'application/json',
-        "Access-Control-Allow-Origin" : "*", 
-        "Access-Control-Allow-Credentials" : true 
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Credentials": true
       }
     })
     const data = await response.json()
@@ -206,7 +208,7 @@ function App() {
   useEffect(async () => {
     //make API calls here
     console.log('start')
-    console.log('start124', feature )
+    console.log('start124', feature)
     const mapData_from_api = await fetchMapData(feature)
     const radialData_from_api = await fetchRadialData()
     const colorMap_from_api = await fetchColorMap(feature)
@@ -241,18 +243,20 @@ function App() {
     setFeature(event.target.value);
   };
 
-  
+
 
   //add an option bar
   return (
     <ThemeProvider theme={theme}>
 
-      <div>
-        <FormControl variant="filled" className={classes.formControl}>
-          <InputLabel id="demo-simple-select-filled-label">Select attribute</InputLabel>
+      <div style={{ display: 'inline' }}>
+        <div style={{ textAlign: 'center' }}>
+          <h3>Happiness, Internet and Religion</h3>
+        </div>
+        <FormControl className={classes.formControl}>
           <Select
-            labelId="demo-simple-select-filled-label"
-            id="demo-simple-select-filled"
+            labelId="demo-simple-select-label"
+            id="demo-simple-select"
             value={feature}
             onChange={handleChange}
           >
@@ -272,44 +276,45 @@ function App() {
             <MenuItem value={"percentage_non_religious"}>Non-religious people(%)</MenuItem>
           </Select>
         </FormControl>
+
       </div>
 
       <Container style={{ padding: "0px", margin: "0px" }}>
 
         <Grid container style={{ height: "47vh", width: "100vw" }}>
           <Grid style={{ height: "100%" }} item xs={3}>
-            <Paper style={{ height: "100%" }} className={classes.paper}>
-              <RadialChart radialData={radialData} radialCountry = {radialCountry} ></RadialChart>
+            <Paper style={{ height: "100%" }} className={classes.paper} variant={"outlined"}>
+              <RadialChart radialData={radialData} radialCountry={radialCountry} ></RadialChart>
             </Paper>
           </Grid>
           <Grid style={{ height: "100%" }} item xs={6}>
-            <Paper style={{ height: "100%" }} className={classes.paper}>
-              <CountryMap mapData={mapData} colorMap={colorMap} feature={feature} setRadialCountry = {setRadialCountry}/>
+            <Paper style={{ height: "100%" }} className={classes.paper} variant={"outlined"}>
+              <CountryMap mapData={mapData} colorMap={colorMap} feature={feature} setRadialCountry={setRadialCountry} />
             </Paper>
           </Grid>
           <Grid style={{ height: "100%" }} item xs={3}>
-            <Paper style={{ height: "100%" }} className={classes.paper}>
-            <ScatterPlot1 data={scatterData} feature={feature} />
+            <Paper style={{ height: "100%" }} className={classes.paper} variant={"outlined"}>
+              <ScatterPlot1 data={scatterData} feature={feature} />
             </Paper>
           </Grid>
         </Grid>
 
 
-        <Grid container style={{ height: "40vh", width: "100vw" }}>
+        <Grid container style={{ height: "38vh", width: "100vw" }}>
+          <Grid style={{ height: "100%" }} item xs={6}>
+            <Paper style={{ height: "100%" }} className={classes.paper} variant={"outlined"}>
+              <ParallelChart data={parallelData} setPieData={setPieData} />
+            </Paper>
+          </Grid>
           <Grid style={{ height: "100%" }} item xs={3}>
-            <Paper style={{ height: "100%" }} className={classes.paper}>
+            <Paper style={{ height: "100%" }} className={classes.paper} variant={"outlined"}>
               <svg style={{ height: "100%", width: "100%" }}>
               </svg>
             </Paper>
           </Grid>
-          <Grid style={{ height: "100%" }} item xs={6}>
-            <Paper style={{ height: "100%" }} className={classes.paper}>
-              <ParallelChart data={parallelData}/>
-            </Paper>
-          </Grid>
           <Grid style={{ height: "100%" }} item xs={3}>
-            <Paper style={{ height: "100%" }} className={classes.paper}>
-            <ScatterPlot data={scatterData} feature={feature} />
+            <Paper style={{ height: "100%" }} className={classes.paper} variant={"outlined"}>
+              <ScatterPlot data={scatterData} feature={feature} />
             </Paper>
           </Grid>
         </Grid>
