@@ -16,7 +16,7 @@ def hello_world():
 @app.route('/get_map_data/<string:feature>')
 def get_map_data(feature):
     data = pd.read_csv("final.csv")
-    result_df = data[['country','iso', feature]]
+    result_df = data[['country', 'iso', feature]]
     return result_df.to_json(orient='records')
     # with open('data/final.csv') as csv_file:
     #     data = csv.reader(csv_file, delimiter=',')
@@ -38,14 +38,22 @@ def get_map_data(feature):
 @app.route('/get_bar_chart_data/<string:country>')
 def get_bar_chart_data(country):
     data = pd.read_csv("final.csv")
-    country_data = data[data['country'] == country].drop(['Population','Score','Overall rank','country','Internet Users','Population Rank',
-    'Internet Rank','iso'],axis=1)
+    country_data = data[data['country'] == country].drop(['Population', 'Score', 'Overall rank', 'country', 'Internet Users', 'Population Rank',
+                                                          'Internet Rank', 'iso'], axis=1)
     return country_data.to_json(orient='records')
+
 
 @app.route('/get_radar_data')
 def get_radar_data():
-    data = pd.read_csv("final.csv").drop(['Population','Score','Overall rank','Internet Users','Population Rank',
-    'Internet Rank','iso'],axis=1)
+    data = pd.read_csv("final.csv").drop(['Population', 'Score', 'Overall rank', 'Internet Users', 'Population Rank',
+                                          'Internet Rank', 'iso'], axis=1)
+    return data.to_json(orient='records')
+
+
+@app.route('/get_pcp_data')
+def get_pcp_data():
+    data = pd.read_csv("final.csv").drop(['Overall rank', 'Internet Users', 'Population Rank',
+                                          'Internet Rank', 'iso'], axis=1)
     return data.to_json(orient='records')
 
 
@@ -67,12 +75,13 @@ def get_religion_data(feature):
 def get_color_map(feature):
     data = pd.read_csv("final.csv")
     result_df = data[feature]
-    maximum=result_df.max()
-    minimum=result_df.min()
-    result_df=((result_df-minimum)/(maximum-minimum))*9+1
-    jsonObj=data[['country','iso']]
-    jsonObj[feature+"_scaled"]=result_df
+    maximum = result_df.max()
+    minimum = result_df.min()
+    result_df = ((result_df-minimum)/(maximum-minimum))*9+1
+    jsonObj = data[['country', 'iso']]
+    jsonObj[feature+"_scaled"] = result_df
     return jsonObj.to_json(orient='records')
+
 
 if __name__ == "__main__":
     app.run(debug=True)
