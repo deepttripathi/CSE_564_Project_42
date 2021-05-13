@@ -18,7 +18,9 @@ import Select from '@material-ui/core/Select';
 // import BarChart from './charts/BarChart'
 import CountryMap from './charts/CountryMap'
 import RadialChart from './charts/radarChartN'
-import ParallelChart from "./charts/pcp";
+import ParallelChart from "./charts/pcp"
+import ScatterPlot from './charts/scatterplot'
+import ScatterPlot1 from './charts/scatterPlot1'
 
 const theme = createMuiTheme({
   palette: {
@@ -55,9 +57,12 @@ function App() {
 
   const [mapData, setMapData] = useState([{}])
   const [radialData, setRadialData] = useState([{}])
+  const [radialCountry, setRadialCountry] = useState('')
   const [colorMap, setColorMap] = useState([{}])
   const [feature, setFeature] = useState(['Score'])
   const [parallelData, setParallelData] = useState([{}])
+  const [scatterData, setScatterData] = useState([{}])
+  // const [countryData, setCountryData] = useState([{}])
   // const [pieData, setPieData] = useState([{}])
   // const [populationData, setPopulationData] = useState([{}])
   // const [religionData, setReligionData] = useState([{}])
@@ -68,6 +73,20 @@ function App() {
   // var t = transition().duration(750)
   const fetchMapData = async (feature) => {
     const url='get_map_data/'+feature
+    const response = await fetch(url, {
+      method: "GET",
+      headers: {
+        'Content-Type': 'application/json',
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Credentials": true
+      }
+    })
+    const data = await response.json()
+    return data
+  }
+
+  const fetchScatterData = async (feature) => {
+    const url='get_scatter_data/'+feature
     const response = await fetch(url, {
       method: "GET",
       headers: {
@@ -160,8 +179,10 @@ function App() {
   //   return data
   // }
 
-  // const fetchPcpData = async()=> {
-  //   const response = await fetch('/get_bar_chart_data/India',{
+  // const fetchcountryData = async(radialCountry)=> {
+  //   console.log("ccountry", radialCountry)
+  //   const cUrl='/get_country_data/'+radialCountry
+  //   const response = await fetch(cUrl,{
   //     method: "GET",
   //     headers: {
   //       'Content-Type': 'application/json',
@@ -190,6 +211,9 @@ function App() {
     const radialData_from_api = await fetchRadialData()
     const colorMap_from_api = await fetchColorMap(feature)
     const pcpData_from_api = await fetchparallelData()
+    const scatterData_from_api = await fetchScatterData(feature)
+    // const countryData_from_api = await fetchcountryData(radialCountry)
+
     // const pieData_from_api = await fetchPieData()
     // console.log('pieData:', pieData_from_api)
     // const populationData_from_api = await fetchPopulationData()
@@ -203,6 +227,8 @@ function App() {
     setRadialData(radialData_from_api)
     setColorMap(colorMap_from_api)
     setParallelData(pcpData_from_api)
+    setScatterData(scatterData_from_api)
+    // setCountryData(countryData_from_api)
     // setPieData(pieData_from_api)
     // setPopulationData(populationData_from_api)
     // setReligionData(religionData_from_api)
@@ -241,9 +267,9 @@ function App() {
             <MenuItem value={"Freedom to make life choices"}>Freedom to make life choices</MenuItem>
             <MenuItem value={"Generosity"}>Generosity</MenuItem>
             <MenuItem value={"Perceptions of corruption"}>Perceptions of corruption</MenuItem>
-            <MenuItem value={"Population"}>Population</MenuItem>
-            <MenuItem value={"Percentage"}>Percentage</MenuItem>
-            <MenuItem value={"percentage_non_religious"}>Percentage non-religious</MenuItem>
+            {/* <MenuItem value={"Population"}>Population</MenuItem> */}
+            <MenuItem value={"Percentage"}>Internet Users(%)</MenuItem>
+            <MenuItem value={"percentage_non_religious"}>Non-religious people(%)</MenuItem>
           </Select>
         </FormControl>
       </div>
@@ -253,18 +279,17 @@ function App() {
         <Grid container style={{ height: "47vh", width: "100vw" }}>
           <Grid style={{ height: "100%" }} item xs={3}>
             <Paper style={{ height: "100%" }} className={classes.paper}>
-              <RadialChart radialData={radialData}></RadialChart>
+              <RadialChart radialData={radialData} radialCountry = {radialCountry} ></RadialChart>
             </Paper>
           </Grid>
           <Grid style={{ height: "100%" }} item xs={6}>
             <Paper style={{ height: "100%" }} className={classes.paper}>
-              <CountryMap mapData={mapData} colorMap={colorMap} feature={feature} />
+              <CountryMap mapData={mapData} colorMap={colorMap} feature={feature} setRadialCountry = {setRadialCountry}/>
             </Paper>
           </Grid>
           <Grid style={{ height: "100%" }} item xs={3}>
             <Paper style={{ height: "100%" }} className={classes.paper}>
-              <svg style={{ height: "100%", width: "100%" }}>
-              </svg>
+            <ScatterPlot1 data={scatterData} feature={feature} />
             </Paper>
           </Grid>
         </Grid>
@@ -279,15 +304,12 @@ function App() {
           </Grid>
           <Grid style={{ height: "100%" }} item xs={6}>
             <Paper style={{ height: "100%" }} className={classes.paper}>
-              {/* <svg style={{ height: "100%", width: "100%" }}> */}
-              {/* </svg> */}
               <ParallelChart data={parallelData}/>
             </Paper>
           </Grid>
           <Grid style={{ height: "100%" }} item xs={3}>
             <Paper style={{ height: "100%" }} className={classes.paper}>
-              <svg style={{ height: "100%", width: "100%" }}>
-              </svg>
+            <ScatterPlot data={scatterData} feature={feature} />
             </Paper>
           </Grid>
         </Grid>

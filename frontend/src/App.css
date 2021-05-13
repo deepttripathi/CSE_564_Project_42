@@ -1,7 +1,7 @@
-svg {
+/* svg {
   background: #eee;
   overflow: visible;
-}
+} */
 .names {
   fill: none;
   stroke: #fff;
@@ -130,4 +130,16 @@ svg {
 
 .axis text {
   cursor: move;
+  font-weight: bold;
+}
+
+.grid line {
+  stroke: hsl(180, 1%, 39%);
+  stroke-dasharray:5,5;
+  stroke-opacity: 0.6;
+}
+.axisPcp{
+  font-weight: bold;
+  fill: black;
+
 }

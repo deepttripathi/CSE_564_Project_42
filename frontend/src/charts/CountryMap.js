@@ -11,7 +11,7 @@ const format = d3.format(",")
 //   ...d3Module,
 
 // }
-export default function CountryMap({ mapData, colorMap, feature }) {
+export default function CountryMap({ mapData, colorMap, feature, setRadialCountry }) {
   const svgRef = useRef()
 
   useEffect(async () => {
@@ -51,16 +51,17 @@ export default function CountryMap({ mapData, colorMap, feature }) {
     // var options = ["Score", "Overall rank", "GDP per capita", "Social support", "Healthy life expectancy", "Freedom to make life choices", "Generosity",
     //   "Perceptions of corruption", "Population", "Percentage", "percentage_non_religious"]
     const svg = d3.select(svgRef.current)
-      // .attr("width", width)
-      // .attr("height", height)
-      .attr('class', 'map')
+
+
+    svg.selectAll("*").remove();
+
+    svg.attr('class', 'map')
       .attr('id', 'worldmap')
       .append('g')
 
       // const width = +svg.attr('width')
       // const height = +svg.attr('height')
     
-    // const g = svg.append('g')
 
 
     // d3.select('.list')
@@ -72,21 +73,25 @@ export default function CountryMap({ mapData, colorMap, feature }) {
     //   .attr("value", function (d) { return d; })
 
     const projection = d3.geoMercator()
-      .scale(80)
-      .translate([width / 2.5, height / 2])
+      .scale(82)
+      .translate([width / 2.5, 230])
 
     const path = d3.geoPath()
       .projection(projection)
 
     svg.call(tip)
 
-
-
     var optionByCountry = {};
     var colorVal = {};
 
+    console.log('percentage',mapData)
+    
     mapData.forEach(function (d) {
-      optionByCountry[d.iso] = +d[feature];
+      if (feature == 'Percentage'){
+        optionByCountry[d.iso] = d[feature];
+      }
+      else
+        optionByCountry[d.iso] = +d[feature];
     });
 
     // var max=0
@@ -177,6 +182,7 @@ export default function CountryMap({ mapData, colorMap, feature }) {
       .on('click', function (d) {
         console.log(d.properties.name);
         var country = d.properties.name;
+        setRadialCountry(country)
         // drawBarChart(d.properties.name)
         // drawRadarPlot(d.properties.name); //print selected country name
       });
@@ -187,8 +193,8 @@ export default function CountryMap({ mapData, colorMap, feature }) {
       .attr("d", path);
 
     let zoom = zoomM()
-        .scaleExtent([0.5, 5])
-        .translateExtent([[0, 0], [1500, 1000]])
+        .scaleExtent([1, 1.25])
+        .translateExtent([[-220, -50], [880, 420]])
         .on('zoom', () => {
             console.log('hello dere',+svg.attr('height'));
             // var g= d3.select(this)

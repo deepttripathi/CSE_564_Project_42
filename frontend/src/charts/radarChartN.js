@@ -4,9 +4,6 @@ import * as d3Module from "d3"
 const d3 = {
     ...d3Module
 }
-
-
-
         
 // async function drawRadarPlot(country){
 
@@ -25,19 +22,20 @@ const d3 = {
 //     }
         
 
-export default function RadialChart({radialData}) {
+export default function RadialChart({radialData, radialCountry}) {
 
 
-    // console.log('Radial data: ', radialData);
+    console.log('Radial data: ', radialCountry);
     const svgRef = useRef()
 
     useEffect(async () => {
+
     var cfg = {
       w: 300, //Width of the circle
       h: 300, //Height of the circle
       margin: {top: 20, right: 20, bottom: 20, left: 20}, //The margins of the SVG
       labelFactor: 0.5,  //How much farther than the radius of the outer circle should the labels be placed
-      wrapWidth: 5,      //The number of pixels after which a label needs to be given a new line
+      wrapWidth: 60,      //The number of pixels after which a label needs to be given a new line
       opacityArea: 0.35,  //The opacity of the area of the blob
       dotRadius: 4,       //The size of the colored circles of each blog
       opacityCircles: 0.1,//The opacity of the circles of each blob
@@ -52,7 +50,7 @@ export default function RadialChart({radialData}) {
     };
   
    
-    // console.log(data)
+    // console.log("country data : ",countryData)
 
     // function userExists(countryName) {
     //     return data.some(function(el) {
@@ -64,10 +62,10 @@ export default function RadialChart({radialData}) {
     // }); 
     // }
     // // 
-    // userExists(country_name)
+    // userExists(radialCountry)
     // console.log('-----')
-    // console.log(country_name)
-    // if (country_name !== 'undefined'){
+    // console.log(radialCountry)
+    // if (radialCountry !== ''){
     //     cfg.opacityArea=0.01
     // }
     // else{
@@ -77,6 +75,12 @@ export default function RadialChart({radialData}) {
     var fieldNames= ["GDP per capita","Social support","Healthy life expectancy","Freedom to make life choices","Generosity",
     "Perceptions of corruption","Percentage","percentage_non_religious"]
 
+    var updatedDimensions=['GDP','Social','Health','Freedom','Generosity','Corruption','Internet users','Non-religious']
+
+    var index=[]
+    for(var i=0;i<fieldNames.length;i++){
+        index[fieldNames[i]]=i;
+    }
     // //Put all of the options into a variable called cfg
     // if('undefined' !== typeof options){
     //   for(var i in options){
@@ -104,6 +108,7 @@ export default function RadialChart({radialData}) {
     // Rearrange data to an array of arrays
     radialData = radialData.map(function(row){
       var newRow = cfg.fields.map(function(key) {
+        //   console.log("key data", updatedDimensions[index[key]])
           return {"axis": key, "value": row[key]};
       });
       return newRow;
@@ -136,13 +141,18 @@ export default function RadialChart({radialData}) {
     // }
     // d3.select('radarplot').select("svg").remove();
 
-    
+
     //Initiate the radar chart SVG
     var svg1 = d3.select(svgRef.current)
     //   .attr("width",  680)
     //   .attr("height", 700)
       .attr("class", "radar")
       .attr('id','radarplot');
+    
+    svg1.selectAll("*").remove();
+
+
+
   
     //Append a g element
     var g = svg1.append("g")
@@ -177,12 +187,14 @@ export default function RadialChart({radialData}) {
     if (cfg.axisLabels === true){
         axisGroup.append("text")
         .attr("class", "legend")
-        .style("font-size", "11px")
-        .attr("text-anchor", "middle")
+        .style("font-size", "12px")
+        .attr("text-anchor", "start")
         .attr("transform", "translate(" + radius * cfg.labelFactor + ", 20)")
         .attr("dy", "0.35em")
         .text(function(d){
-            return d;})
+            return updatedDimensions[index[d]];
+            // return d;
+        })
         .call(wrap, cfg.wrapWidth)
         .attr("fill",'black')
     }
@@ -308,16 +320,16 @@ export default function RadialChart({radialData}) {
     //Taken from http://bl.ocks.org/mbostock/7555321
     //Wraps SVG text
     function wrap(text, width) {
-        console.log('text',text)
+        // console.log('text',text)
 
       text.each(function() {
-          console.log('text',text)
+        //   console.log('text',text)
         var text = d3.select(this),
           words = text.text().split(/\s+/).reverse(),
           word,
           line = [],
           lineNumber = 0,
-          lineHeight = 1.4, // ems
+          lineHeight = 0.1, // ems
           y = text.attr("y"),
           x = text.attr("x"),
           dy = parseFloat(text.attr("dy")),
@@ -414,7 +426,7 @@ export default function RadialChart({radialData}) {
     return ret;
   
   }
-},[radialData])
+},[radialData, radialCountry])
 return(
     <svg style={{ height: "100%", width: "100%" }} className='radar' ref={svgRef}></svg>
     )
