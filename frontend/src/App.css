@@ -123,14 +123,18 @@
 .axis line,
 .axis path {
   display: inline;
-  fill: none;
-  stroke: #000;
+  fill:none;
+  /* stroke: #000; */
   shape-rendering: crispEdges;
+  stroke: hsl(180, 1%, 39%);
+
 }
 
 .axis text {
   cursor: move;
-  font-weight: bold;
+  /* font-weight: bold; */
+  fill : hsl(180, 1%, 39%);
+
 }
 
 .grid line {

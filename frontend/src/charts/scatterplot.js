@@ -7,7 +7,6 @@ const d3 = {
     ...d3Module
 }
 
-
 export default function ScatterPlot({data, feature}) {
 
 
@@ -201,8 +200,6 @@ export default function ScatterPlot({data, feature}) {
         .style("alignment-baseline", "middle")
         .style("font-size","11px")
         .attr('font-weight','bold');
-
-
 
 
     },[data, feature])

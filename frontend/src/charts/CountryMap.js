@@ -31,6 +31,8 @@ export default function CountryMap({ mapData, colorMap, feature, setRadialCountr
 
   async function displayMap(mapData, colorMap, feature) {
 
+    // var zoom = d3.zoom().on("zoom", zoomed);
+
     const tip = d3.tip()
       .attr('class', 'd3-tip')
       .offset([-10, 0])
@@ -41,6 +43,8 @@ export default function CountryMap({ mapData, colorMap, feature, setRadialCountr
     const margin = { top: 0, right: 0, bottom: 0, left: 0 }
     const width = 800 - margin.left - margin.right
     const height = 500 - margin.top - margin.bottom
+    const active = d3.select(null);
+
 
     const color = d3.scaleThreshold()
       .domain([1, 2, 3, 4, 5, 6, 7, 8, 9, 10])
@@ -58,11 +62,10 @@ export default function CountryMap({ mapData, colorMap, feature, setRadialCountr
     svg.attr('class', 'map')
       .attr('id', 'worldmap')
       .append('g')
-
+      // .on("click", stopped, true);
       // const width = +svg.attr('width')
       // const height = +svg.attr('height')
-    
-
+      // .on("click", reset);
 
     // d3.select('.list')
     //   .selectAll('myOptions')
@@ -71,6 +74,7 @@ export default function CountryMap({ mapData, colorMap, feature, setRadialCountr
     //   .append('option')
     //   .text(function (d) { return d; }) // text showed in the menu
     //   .attr("value", function (d) { return d; })
+    var g = svg.append('g'); 
 
     const projection = d3.geoMercator()
       .scale(82)
@@ -94,53 +98,7 @@ export default function CountryMap({ mapData, colorMap, feature, setRadialCountr
         optionByCountry[d.iso] = +d[feature];
     });
 
-    // var max=0
-    // function getMaxVal() {
-    //   return mapData.reduce((max, p) => +p[feature] > max ? +p[feature]: max, mapData[0][feature]);
-    // }
-    // var maxVal=getMaxVal()
 
-    // var min=-2
-    // function getMinVal() {
-    //   return mapData.reduce((min, p) => +p[feature] < min ? +p[feature]: min, mapData[0][feature]);
-    // }
-    // var minVal=getMinVal()
-
-    // var range=(maxVal/10)
-
-    // var i;
-    // var label=[]
-    // var xmin=minVal
-    // range=range.toFixed(2)
-    // for (i = 0; i < 10; i++) { 
-    //   xmin=Number(xmin).toFixed(2)
-    //   var newrange=(Number(xmin)+Number(range)).toFixed(2)
-    //   label[i]=((xmin).toString())+"-"+(newrange.toString());
-    //   xmin=newrange
-    // }
-
-    // if(document.getElementById("legend"))
-    // document.getElementById("legend").remove();
-
-    // //adding legend
-    // var g = svg.append("g")
-    // .attr("class", "legendThreshold")
-    // .attr("transform", "translate(5,320)");
-    // g.append("text")
-    // .attr("class", "caption")
-    // .attr("id","legend")
-    // .attr("x", 0)
-    // .attr("y", -10)
-    // .text(function (d){
-    //   return feature;
-    // });
-
-    // var legend = d3.legendColor()
-    // .labels(function (d) { return label[d.i]; })
-    // .shapePadding(4)
-    // .scale(color);
-    // svg.select(".legendThreshold")
-    // .call(legend);
 
     colorMap.forEach(function (d) {
       colorVal[d.iso] = d[feature + "_scaled"];
@@ -203,6 +161,18 @@ export default function CountryMap({ mapData, colorMap, feature, setRadialCountr
               svg.attr('transform', event.transform)
         });
     svg.call(zoom);
+
+    // function stopped() {
+    //   if (event.defaultPrevented) event.stopPropagation();
+    // }
+
+    // function zoomed() {
+    //   g.style("stroke-width", 1.5 / event.transform.k + "px");
+    //   // g.attr("transform", "translate(" + d3.event.translate + ")scale(" + d3.event.scale + ")"); // not in d3 v4
+    //   g.attr("transform", event.transform); // updated for d3 v4
+    // }
+
+
   }
   return (
     <svg style={{ height: "100%", width: "100%" }} className='svgcontainer' id='svg' ref={svgRef}>
