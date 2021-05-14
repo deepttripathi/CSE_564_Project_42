@@ -8,6 +8,10 @@
   stroke-linejoin: round;
 }
 
+h2 {
+  color: #f6fbfc;
+}
+
 /* Tooltip CSS */
 .d3-tip {
   line-height: 1.5;

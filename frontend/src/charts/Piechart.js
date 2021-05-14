@@ -65,7 +65,7 @@ export default function Piechart({ data }) {
         g.append("path")
             .attr("d", arc)
             .style("fill", function (d, i) { return color(i); })
-            .style('opacity', '0.6')
+            .style('opacity', '1')
             .on('mouseover', (d, i) => {
 
                 focusText.style('opacity', 1)

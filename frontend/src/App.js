@@ -281,9 +281,9 @@ function App() {
 
       </div>
 
-      <Container style={{ padding: "0px", margin: "0px" }}>
+      <Container style={{ padding: "1px", margin: "0px" }}>
 
-        <Grid container style={{ height: "45vh", width: "100vw" }}>
+        <Grid container style={{ height: "45vh", width: "100vw", padding: "0.7px" }}>
           <Grid style={{ height: "100%" }} item xs={3}>
             <Paper style={{ height: "100%" }} className={classes.paper} variant={"outlined"}>
               <RadialChart radialData={radialData} radialCountry={radialCountry} ></RadialChart>
