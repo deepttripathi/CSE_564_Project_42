@@ -266,7 +266,6 @@ function App() {
               <em>Select attribute</em>
             </MenuItem>
             <MenuItem value={"Score"}>Happiness Score</MenuItem>
-            <MenuItem value={"Overall rank"}>Overall rank</MenuItem>
             <MenuItem value={"GDP per capita"}>GDP per capita</MenuItem>
             <MenuItem value={"Social support"}>Social support</MenuItem>
             <MenuItem value={"Healthy life expectancy"}>Healthy life expectancy</MenuItem>
