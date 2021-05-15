@@ -41,7 +41,9 @@ export default function RadialChart({ radialData, radialCountry }) {
       opacityCircles: 0.1,//The opacity of the circles of each blob
       strokeWidth: 0.7,   //The width of the stroke around each blob
       roundStrokes: false,//If true the area and stroke will follow a round path (cardinal-closed)
-      color: d3.scaleOrdinal(d3.schemeCategory10),  //Color function
+      color: d3.scaleOrdinal()
+        .range(["rgb(66,146,198)", "rgb(247,251,255)", "rgb(222,235,247)", "rgb(198,219,239)", "rgb(158,202,225)", "rgb(107,174,214)", "rgb(66,146,198)", "rgb(33,113,181)", "rgb(8,81,156)", "rgb(8,48,107)", "rgb(3,19,43)"])
+      ,  //Color function
       hover: true,
       axisLabels: true,
       tickLabels: true,
@@ -157,7 +159,14 @@ export default function RadialChart({ radialData, radialCountry }) {
 
     svg1.selectAll("*").remove();
 
-
+    svg1.append('text')
+      .attr("x", 170)
+      .attr("y", 12)
+      .attr("text-anchor", "middle")
+      .style("font-size", "15px")
+      .style("text-decoration", "underline")
+      .style("font-weight", "bold")
+      .text(radialCountry)
 
 
     //Append a g element

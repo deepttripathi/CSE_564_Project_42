@@ -29,9 +29,10 @@ export default function Piechart({ data }) {
 
         var width = 400,
             height = 300,
-            radius = Math.min(width, height) / 2;
+            radius = Math.min(width, height) / 2 - 10;
 
-        const color = d3.scaleOrdinal().range(d3.schemeCategory10)
+        const color = d3.scaleOrdinal()
+            .range(["rgb(247,251,255)", "rgb(222,235,247)", "rgb(198,219,239)", "rgb(158,202,225)", "rgb(107,174,214)", "rgb(66,146,198)", "rgb(51,123,189)", "rgb(33,113,181)", "rgb(25,98,166)", "rgb(8,81,156)"])
 
 
         var arc = d3.arc()
@@ -50,6 +51,15 @@ export default function Piechart({ data }) {
             .append("g")
             .attr("transform", "translate(" + 165 + "," + height / 2 + ")");
 
+        svg.append('text')
+            .attr("x", 0)
+            .attr("y", -138)
+            .attr("text-anchor", "middle")
+            .style("font-size", "15px")
+            .style("text-decoration", "underline")
+            .style("font-weight", "bold")
+            .text("Regional Data")
+
         var g = svg.selectAll(".arc")
             .data(pie(modifiedData))
             .enter().append("g")
@@ -66,6 +76,8 @@ export default function Piechart({ data }) {
             .attr("d", arc)
             .style("fill", function (d, i) { return color(i); })
             .style('opacity', '1')
+            .attr("stroke", "black")
+            .style("stroke-width", "1px")
             .on('mouseover', (d, i) => {
 
                 focusText.style('opacity', 1)
@@ -78,7 +90,8 @@ export default function Piechart({ data }) {
                 focusText
                     .html(modifiedDimension[i])
                     .attr("x", -70)
-                    .attr("y", -141)
+                    .attr("y", 141)
+                    .style("text-align", "middle")
             })
             .on("mouseout", function (d) {
 
